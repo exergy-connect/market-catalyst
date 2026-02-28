@@ -45,6 +45,10 @@ This repo is designed to be **cloned**. An entrepreneur can take this "Unbaked" 
 
 **Example Implementation:** See `/examples/labor-market` for a reference implementation of Sarah Springsteen Trumble’s *Theory of Online Market Gravity*.
 
+## 🎯 Demo
+
+Try the interactive [Vouch PR Demo](https://exergy-connect.github.io/market-catalyst/examples/job-market/vouch-pr-demo.html) to create vouches and submit them via GitHub Pull Requests - no terminal required!
+
 ## ⚖️ License
 
 Distributed under the **MIT License**. See [LICENSE](LICENSE) file for details.
