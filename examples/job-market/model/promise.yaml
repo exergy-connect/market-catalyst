@@ -1,0 +1,72 @@
+name: "Job Market Trust Infrastructure Model"
+version: "26.02.27.1"
+author: "Market Catalyst - Job Market"
+allow_unlimited_fields: true
+include_x_fields: true
+
+entities:
+  - name: promise
+    brief: "Promise made in job posting or during hiring process"
+    description: |
+      Tracks promises made by employers: salary ranges, response timelines,
+      process steps, etc. These are compared against actual outcomes to measure
+      transparency. Examples: "We'll respond within 2 weeks", "Salary range
+      $80k-$100k", "3 interview rounds".
+    primary_key: promise_id
+    parents:
+      - child_fk: job_posting_id
+        parent_array: promises
+    fields:
+      - name: promise_id
+        type: string
+        required: true
+        description: "Unique promise identifier"
+      
+      - name: job_posting_id
+        type: string
+        required: true
+        foreignKeys:
+          - entity: job_posting
+        description: "Reference to job posting where promise was made"
+      
+      - name: promise_type
+        type: string
+        required: true
+        enum:
+          - Salary Range
+          - Response Timeline
+          - Process Steps
+          - Benefits
+          - Work Arrangement
+          - Other
+        description: "Type of promise made"
+      
+      - name: promise_text
+        type: string
+        required: true
+        description: "Text of the promise (e.g., 'We'll respond within 2 weeks')"
+      
+      - name: promised_value_min
+        type: number
+        required: false
+        description: "Minimum promised value (for numeric promises like salary)"
+      
+      - name: promised_value_max
+        type: number
+        required: false
+        description: "Maximum promised value (for numeric promises like salary)"
+      
+      - name: promised_timeline_days
+        type: integer
+        required: false
+        description: "Promised timeline in days (e.g., 14 for '2 weeks')"
+      
+      - name: was_kept
+        type: boolean
+        required: false
+        description: "Whether the promise was kept (verified against actual outcomes)"
+      
+      - name: verification_date
+        type: date
+        required: false
+        description: "Date when promise fulfillment was verified (YYYY-MM-DD)"

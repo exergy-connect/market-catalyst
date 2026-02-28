@@ -1,0 +1,76 @@
+name: "Job Market Trust Infrastructure Model"
+version: "26.02.27.1"
+author: "Market Catalyst - Job Market"
+allow_unlimited_fields: true
+include_x_fields: true
+
+entities:
+  - name: verification
+    brief: "Verification and anti-gamification data for reviews"
+    description: |
+      Cross-verification data, manipulation detection, and evidence weighting
+      for reviews. This implements the Verification & Anti-Gamification Layer
+      that ensures data reliability. Includes cross-referencing for consistency,
+      weighting by verifiability, and detection of coordinated manipulation.
+    primary_key: verification_id
+    parents:
+      - child_fk: review_id
+        parent_array: verification
+    fields:
+      - name: verification_id
+        type: string
+        required: true
+        description: "Unique verification record identifier"
+      
+      - name: review_id
+        type: string
+        required: true
+        foreignKeys:
+          - entity: review
+        description: "Reference to the review being verified"
+      
+      - name: verification_date
+        type: date
+        required: true
+        description: "Date verification was performed (YYYY-MM-DD)"
+      
+      - name: verification_method
+        type: string
+        required: true
+        enum:
+          - Cross-Reference
+          - Evidence Weighting
+          - Manipulation Detection
+          - Consistency Check
+          - Anonymity Check
+        description: "Method of verification used"
+      
+      - name: is_consistent
+        type: boolean
+        required: false
+        description: "Whether review is consistent with other reports"
+      
+      - name: verifiability_weight
+        type: number
+        required: false
+        min: 0
+        max: 1
+        description: "Weight assigned based on verifiability (0.0 to 1.0)"
+      
+      - name: manipulation_risk_score
+        type: number
+        required: false
+        min: 0
+        max: 1
+        description: "Risk score for manipulation (0.0 = low risk, 1.0 = high risk)"
+      
+      - name: cross_reference_count
+        type: integer
+        required: false
+        min: 0
+        description: "Number of other reviews that cross-reference this one"
+      
+      - name: notes
+        type: string
+        required: false
+        description: "Verification notes or flags"

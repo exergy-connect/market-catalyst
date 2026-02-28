@@ -1,0 +1,129 @@
+name: "Job Market Trust Infrastructure Model"
+version: "26.02.27.1"
+author: "Market Catalyst - Job Market"
+allow_unlimited_fields: true
+include_x_fields: true
+
+entities:
+  - name: personal_vouch
+    brief: "Job market specific vouch extending core vouch concept"
+    description: |
+      Extends the core vouch entity with job market specific fields. A personal vouch
+      for a job posting represents a conditional transfer of reputation where someone
+      goes on record stating they believe a job posting represents a real opportunity.
+      This implements the Trust Chain concept from the core vouch model, with job-market
+      specific relationship context.
+    primary_key: vouch_id
+    parents:
+      - child_fk: job_posting_id
+        parent_array: personal_vouches
+    fields:
+      - name: vouch_id
+        type: string
+        required: true
+        description: "Unique vouch identifier (matches core vouch.vouch_id if linked)"
+      
+      - name: job_posting_id
+        type: string
+        required: true
+        foreignKeys:
+          - entity: job_posting
+        description: "Reference to the job posting being vouched for (subject_id in core vouch)"
+      
+      - name: core_vouch_id
+        type: string
+        required: false
+        foreignKeys:
+          - entity: vouch
+        description: "Optional reference to core vouch entity for reputation weighting and revocation"
+      
+      - name: source_identity
+        type: string
+        required: true
+        description: "GitHub UID or Public Key of the voucher (from core vouch concept)"
+      
+      - name: claim_type
+        type: string
+        required: true
+        enum:
+          - EXISTENCE
+          - INTEGRITY
+          - TERMS
+        description: "What specifically is being vouched for (from core vouch: EXISTENCE, INTEGRITY, TERMS)"
+      
+      - name: evidence_link
+        type: string
+        required: false
+        description: "Reference to a commit, file, or external proof that supports the claim (from core vouch)"
+      
+      - name: source_seniority
+        type: integer
+        required: false
+        min: 0
+        description: "Computed age of the source account in days (e.g., GitHub account age). Used for reputation weighting."
+      
+      - name: source_activity_index
+        type: number
+        required: false
+        min: 0
+        description: "Historical 'Proof of Work' metric (e.g., commits/contributions count). Used for reputation weighting."
+      
+      - name: vouch_weight
+        type: number
+        required: false
+        min: 0
+        description: "The final 'force' this vouch applies to the Market Gravity. Computed from source reputation metrics."
+      
+      - name: valid_from
+        type: date
+        required: true
+        description: "Date from which the vouch is valid (YYYY-MM-DD). Ensures vouches don't stay 'green' if market conditions change."
+      
+      - name: valid_until
+        type: date
+        required: false
+        description: "Date until which the vouch is valid (YYYY-MM-DD). Optional expiration date for time-based validity."
+      
+      - name: revocation_digest
+        type: string
+        required: false
+        description: "If the voucher discovers the 'Originator' lied, they can issue a 'Revocation' which is appended to the ledger, immediately flipping the go_nogo_signal. This is a cryptographic digest/hash of the revocation."
+      
+      - name: revoked_date
+        type: date
+        required: false
+        description: "Date when the vouch was revoked (YYYY-MM-DD), if applicable"
+      
+      - name: voucher_relationship
+        type: string
+        required: false
+        enum:
+          - Current Employee
+          - Former Employee
+          - Industry Contact
+          - Recruiter
+          - Referral Source
+          - Other
+        description: "Job market specific: Relationship of the voucher to the company/position"
+      
+      - name: confidence_level
+        type: integer
+        required: false
+        min: 1
+        max: 5
+        description: "Job market specific: Confidence level (1-5) of the voucher in the legitimacy of the posting"
+      
+      - name: vouch_statement
+        type: string
+        required: false
+        description: "Optional statement from the voucher explaining why they believe this is a real opportunity"
+      
+      - name: is_verified
+        type: boolean
+        required: false
+        description: "Whether the vouch has been verified (e.g., through cross-referencing or evidence)"
+      
+      - name: verification_notes
+        type: string
+        required: false
+        description: "Notes about verification of the vouch"

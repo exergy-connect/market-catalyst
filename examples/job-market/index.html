@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Market Trust Infrastructure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Trust Infrastructure for Job Hunting</h1>
+            <p class="subtitle">Different views. Same data. One trust infrastructure.</p>
+            <p class="tagline">Not separate platforms • One architecture</p>
+        </header>
+
+        <div class="verification-layer">
+            <div class="verification-header">
+                <h2>VERIFICATION & ANTI-GAMIFICATION LAYER</h2>
+                <div class="principles">
+                    <span class="principle">Cross-Verification</span>
+                    <span class="principle">Weighting by Evidence</span>
+                    <span class="principle">Manipulation Detection</span>
+                    <span class="principle">Anonymity + Accountability</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cathedral-structure">
+            <div class="cathedral-columns">
+                <div class="column left-column"></div>
+                <div class="column right-column"></div>
+            </div>
+            <div class="tabs-container">
+                <div class="stained-glass-windows">
+                    <button class="stained-glass-window active" data-tab="trust-stock-market" style="--glass-color: #4A90E2;">
+                        <div class="window-frame"></div>
+                        <div class="glass-content">
+                            <span class="tab-icon">📈</span>
+                            <span class="tab-title">Trust Stock Market</span>
+                            <span class="tab-subtitle">Trends - Volatility Accountability</span>
+                        </div>
+                    </button>
+                    <button class="stained-glass-window" data-tab="google-maps" style="--glass-color: #28a745;">
+                        <div class="window-frame"></div>
+                        <div class="glass-content">
+                            <span class="tab-icon">🗺️</span>
+                            <span class="tab-title">Google Maps of Hiring</span>
+                            <span class="tab-subtitle">Routes - Bottlenecks Alternatives</span>
+                        </div>
+                    </button>
+                    <button class="stained-glass-window" data-tab="wikipedia" style="--glass-color: #ff8c00;">
+                        <div class="window-frame"></div>
+                        <div class="glass-content">
+                            <span class="tab-icon">📚</span>
+                            <span class="tab-title">Wikipedia of Job Hunting</span>
+                            <span class="tab-subtitle">Collective Knowledge Lived Experience</span>
+                        </div>
+                    </button>
+                    <button class="stained-glass-window" data-tab="simple-signals-1" style="--glass-color: #00CED1;">
+                        <div class="window-frame"></div>
+                        <div class="glass-content">
+                            <span class="tab-icon">⚡</span>
+                            <span class="tab-title">Simple Signals</span>
+                            <span class="tab-subtitle">Quick Checks Go/No-Go</span>
+                        </div>
+                    </button>
+                    <button class="stained-glass-window" data-tab="simple-signals-2" style="--glass-color: #dc3545;">
+                        <div class="window-frame"></div>
+                        <div class="glass-content">
+                            <span class="tab-icon">🚦</span>
+                            <span class="tab-title">Simple Signals</span>
+                            <span class="tab-subtitle">Go/No-Go</span>
+                        </div>
+                    </button>
+                </div>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="trust-stock-market">
+                    <div class="content-header">
+                        <h2>Trust Stock Market</h2>
+                        <p class="content-subtitle">Trends - Volatility Accountability</p>
+                    </div>
+                    <div class="content-body">
+                        <div class="chart-placeholder">
+                            <svg viewBox="0 0 400 200" class="chart">
+                                <polyline
+                                    points="20,180 60,150 100,120 140,100 180,80 220,90 260,70 300,50 340,40 380,30"
+                                    fill="none"
+                                    stroke="#4A90E2"
+                                    stroke-width="3"
+                                />
+                                <polyline
+                                    points="20,150 60,130 100,100 140,90 180,70 220,60 260,50 300,45 340,35 380,25"
+                                    fill="none"
+                                    stroke="#7B68EE"
+                                    stroke-width="2"
+                                    opacity="0.7"
+                                />
+                            </svg>
+                        </div>
+                        <p>Track trust metrics, trends, and accountability across the job market ecosystem.</p>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="google-maps">
+                    <div class="content-header">
+                        <h2>Google Maps of Hiring</h2>
+                        <p class="content-subtitle">Routes - Bottlenecks Alternatives</p>
+                    </div>
+                    <div class="content-body">
+                        <div class="search-container">
+                            <input type="text" id="hiring-search" class="search-input" placeholder="Search companies, jobs, promises, vouches...">
+                            <div class="search-filters">
+                                <select id="entity-filter" class="filter-select">
+                                    <option value="">All Entities</option>
+                                    <option value="company">Companies</option>
+                                    <option value="job_posting">Job Postings</option>
+                                    <option value="promise">Promises</option>
+                                    <option value="vouch">Vouches</option>
+                                    <option value="personal_vouch">Personal Vouches</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="records-container" class="records-container">
+                            <div class="loading-message">Loading data...</div>
+                        </div>
+                        <div id="no-results" class="no-results" style="display: none;">
+                            <p>No records found matching your search.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="wikipedia">
+                    <div class="content-header">
+                        <h2>Wikipedia of Job Hunting</h2>
+                        <p class="content-subtitle">Collective Knowledge Lived Experience</p>
+                    </div>
+                    <div class="content-body">
+                        <div class="network-placeholder">
+                            <div class="network-node">Company A</div>
+                            <div class="network-node">Company B</div>
+                            <div class="network-node">Company C</div>
+                            <div class="network-node">Industry Insights</div>
+                            <div class="network-node">Best Practices</div>
+                        </div>
+                        <p>Access collective knowledge and lived experiences from the job hunting community.</p>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="simple-signals-1">
+                    <div class="content-header">
+                        <h2>Simple Signals</h2>
+                        <p class="content-subtitle">Quick Checks Go/No-Go</p>
+                    </div>
+                    <div class="content-body">
+                        <div class="signals-grid">
+                            <div class="signal-card">
+                                <div class="signal-icon">👤</div>
+                                <div class="signal-status go">GO</div>
+                            </div>
+                            <div class="signal-card">
+                                <div class="signal-icon">💬</div>
+                                <div class="signal-status go">GO</div>
+                            </div>
+                            <div class="signal-card">
+                                <div class="signal-icon">📄</div>
+                                <div class="signal-status no-go">NO-GO</div>
+                            </div>
+                            <div class="signal-card">
+                                <div class="signal-icon">✅</div>
+                                <div class="signal-status go">GO</div>
+                            </div>
+                        </div>
+                        <p>Quick checks and signals to help you make go/no-go decisions efficiently.</p>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="simple-signals-2">
+                    <div class="content-header">
+                        <h2>Simple Signals</h2>
+                        <p class="content-subtitle">Go/No-Go</p>
+                    </div>
+                    <div class="content-body">
+                        <div class="traffic-light-container">
+                            <div class="traffic-light">
+                                <div class="light red active"></div>
+                                <div class="light yellow"></div>
+                                <div class="light green"></div>
+                            </div>
+                        </div>
+                        <div class="decision-panel">
+                            <div class="decision-item">
+                                <span class="decision-label">Response Rate:</span>
+                                <span class="decision-value go">GO</span>
+                            </div>
+                            <div class="decision-item">
+                                <span class="decision-label">Company Reputation:</span>
+                                <span class="decision-value go">GO</span>
+                            </div>
+                            <div class="decision-item">
+                                <span class="decision-label">Ghosting Risk:</span>
+                                <span class="decision-value no-go">NO-GO</span>
+                            </div>
+                        </div>
+                        <p>Clear go/no-go signals based on verified data and trust metrics.</p>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="output/consolidated_data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

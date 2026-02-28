@@ -1,0 +1,96 @@
+{
+  "version": 11,
+  "timestamp": "2026-02-28T04:37:22.630857+00:00",
+  "model": {
+    "name": "Market Catalyst Core Model",
+    "version": "26.02.27.1",
+    "author": "Market Catalyst",
+    "include_x_fields": true,
+    "max_name_underscores": 2,
+    "exclude": null
+  },
+  "data": {
+    "change": {
+      "000000000010": {
+        "id": 10,
+        "timestamp": "2026-02-27T22:37:22.630637",
+        "author": "jeroen",
+        "note": "Consolidate high-gravity anchor example data with JavaScript output"
+      }
+    },
+    "company": {
+      "company-exergy-tech": {
+        "company_id": "company-exergy-tech",
+        "company_name": "Exergy Tech",
+        "domain": "exergy.tech",
+        "industry": "Technology",
+        "location": "Remote",
+        "c": 10,
+        "v": 10,
+        "job_postings": [
+          {
+            "job_posting_id": "job-exergy-001",
+            "job_title": "Senior Systems Architect",
+            "job_description": "Lead systems architecture for open-source infrastructure projects",
+            "posted_date": "2024-02-27",
+            "location": "Remote",
+            "employment_type": "Full-time",
+            "advertised_salary_min": 160000,
+            "advertised_salary_currency": "USD",
+            "c": 10,
+            "v": 10,
+            "promises": [
+              {
+                "promise_id": "promise-salary-001",
+                "promise_type": "Salary Range",
+                "promise_text": "Salary range $160,000+",
+                "promised_value_min": 160000,
+                "c": 10,
+                "v": 10
+              },
+              {
+                "promise_id": "promise-timeline-001",
+                "promise_type": "Response Timeline",
+                "promise_text": "We'll respond within 7 days",
+                "promised_timeline_days": 7,
+                "c": 10,
+                "v": 10
+              }
+            ],
+            "personal_vouches": [
+              {
+                "vouch_id": "personal-vouch-001",
+                "core_vouch_id": "vouch-integrity-001",
+                "source_identity": "github-uid-octocat-99",
+                "claim_type": "INTEGRITY",
+                "source_seniority": 3200,
+                "source_activity_index": 0.95,
+                "vouch_weight": 4.8,
+                "valid_from": "2024-02-27",
+                "voucher_relationship": "Current Employee",
+                "vouch_statement": "The engineering culture here matches the open-source values Sarah advocates for. I am personally overseeing this hiring loop.",
+                "c": 10,
+                "v": 10
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "vouch": {
+      "vouch-integrity-001": {
+        "vouch_id": "vouch-integrity-001",
+        "subject_id": "job-exergy-001",
+        "source_identity": "github-uid-octocat-99",
+        "claim_type": "INTEGRITY",
+        "source_seniority": 3200,
+        "source_activity_index": 0.95,
+        "vouch_weight": 4.8,
+        "valid_from": "2024-02-27",
+        "vouch_statement": "High-integrity opportunity with strong engineering culture",
+        "c": 10,
+        "v": 10
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+name: "Market Catalyst Core Model"
+version: "26.02.27.1"
+author: "Market Catalyst"
+allow_unlimited_fields: true
+include_x_fields: true
+
+entities:
+  - name: vouch
+    brief: "Generic vouch entity for conditional transfer of reputation"
+    description: |
+      A market-agnostic vouch entity that represents a conditional transfer of
+      reputation. A vouch is a structural link between a Subject (the opportunity
+      or thing being vouched for) and a Source (the identity making the vouch).
+      This implements the Trust Chain concept where vouches can be weighted by
+      source reputation, have time-based validity, and support revocation.
+    primary_key: vouch_id
+    fields:
+      - name: vouch_id
+        type: string
+        required: true
+        description: "Unique vouch identifier"
+      
+      - name: subject_id
+        type: string
+        required: true
+        description: "Unique identifier of the thing being vouched for (the 'Opportunity' or subject)"
+      
+      - name: source_identity
+        type: string
+        required: true
+        description: "GitHub UID or Public Key of the voucher (the source making the vouch)"
+      
+      - name: claim_type
+        type: string
+        required: true
+        enum:
+          - EXISTENCE
+          - INTEGRITY
+          - TERMS
+        description: "What specifically is being vouched for (EXISTENCE: thing exists, INTEGRITY: thing is legitimate, TERMS: terms are accurate)"
+      
+      - name: evidence_link
+        type: string
+        required: false
+        description: "Reference to a commit, file, or external proof that supports the claim"
+      
+      - name: source_seniority
+        type: integer
+        required: false
+        min: 0
+        description: "Computed age of the source account in days (e.g., GitHub account age). Used for reputation weighting."
+      
+      - name: source_activity_index
+        type: number
+        required: false
+        min: 0
+        description: "Historical 'Proof of Work' metric (e.g., commits/contributions count). Used for reputation weighting."
+      
+      - name: vouch_weight
+        type: number
+        required: false
+        min: 0
+        description: "The final 'force' this vouch applies to the Market Gravity. Computed from source reputation metrics."
+      
+      - name: valid_from
+        type: date
+        required: true
+        description: "Date from which the vouch is valid (YYYY-MM-DD). Ensures vouches don't stay 'green' if market conditions change."
+      
+      - name: valid_until
+        type: date
+        required: false
+        description: "Date until which the vouch is valid (YYYY-MM-DD). Optional expiration date for time-based validity."
+      
+      - name: revocation_digest
+        type: string
+        required: false
+        description: "If the voucher discovers the 'Originator' lied, they can issue a 'Revocation' which is appended to the ledger, immediately flipping the go_nogo_signal. This is a cryptographic digest/hash of the revocation."
+      
+      - name: revoked_date
+        type: date
+        required: false
+        description: "Date when the vouch was revoked (YYYY-MM-DD), if applicable"
+      
+      - name: vouch_statement
+        type: string
+        required: false
+        description: "Optional statement from the voucher explaining the vouch"

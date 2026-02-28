@@ -1,0 +1,74 @@
+name: "Job Market Trust Infrastructure Model"
+version: "26.02.27.1"
+author: "Market Catalyst - Job Market"
+allow_unlimited_fields: true
+include_x_fields: true
+
+entities:
+  - name: application_timeline
+    brief: "Timeline event in the application process"
+    description: |
+      Structured events in the application lifecycle: responses, interviews,
+      ghosting, offers, rejections. These are verifiable events that form
+      the basis of trust metrics. Examples: "Applied Jan 15", "First response
+      Jan 18", "Ghosted after second interview", "Offer received Feb 1".
+    primary_key: timeline_event_id
+    parents:
+      - child_fk: application_id
+        parent_array: timeline
+    fields:
+      - name: timeline_event_id
+        type: string
+        required: true
+        description: "Unique timeline event identifier"
+      
+      - name: application_id
+        type: string
+        required: true
+        foreignKeys:
+          - entity: application
+        description: "Reference to the application this event belongs to"
+      
+      - name: event_date
+        type: date
+        required: true
+        description: "Date the event occurred (YYYY-MM-DD)"
+      
+      - name: event_datetime
+        type: datetime
+        required: false
+        description: "Full date and time of the event"
+      
+      - name: event_type
+        type: string
+        required: true
+        enum:
+          - Application Submitted
+          - First Response
+          - Acknowledgment Received
+          - Screening Call
+          - Technical Interview
+          - Behavioral Interview
+          - Final Interview
+          - Offer Extended
+          - Offer Accepted
+          - Offer Rejected
+          - Rejection Received
+          - Ghosted
+          - Withdrawn
+        description: "Type of timeline event"
+      
+      - name: response_time_days
+        type: duration_in_days
+        required: false
+        description: "Days from application submission to this event (computed from event_date - application.submitted_date)"
+      
+      - name: was_promise_kept
+        type: boolean
+        required: false
+        description: "Whether a timeline promise was kept (if applicable)"
+      
+      - name: notes
+        type: string
+        required: false
+        description: "Additional notes about the event (structured, not free-text review)"

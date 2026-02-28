@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vouch PR Demo - Low-Code GitHub Integration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cinzel', serif;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(101, 67, 33, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #2c1810 0%, #1a0f08 50%, #0d0502 100%);
+            background-attachment: fixed;
+            padding: 20px;
+            color: #e8dcc6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(13, 5, 2, 0.8);
+            border: 3px solid rgba(139, 69, 19, 0.6);
+            border-radius: 0;
+            padding: 40px;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.7),
+                inset 0 0 50px rgba(139, 69, 19, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(184, 134, 11, 0.5);
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.5rem;
+            color: #f4e8d0;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #c9a882;
+            font-style: italic;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.5rem;
+            color: #f4e8d0;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e8dcc6;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .required {
+            color: rgba(220, 53, 69, 0.8);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(26, 15, 8, 0.8);
+            border: 2px solid rgba(139, 69, 19, 0.5);
+            border-radius: 0;
+            color: #f4e8d0;
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: rgba(184, 134, 11, 0.8);
+            box-shadow: 0 0 10px rgba(184, 134, 11, 0.3);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #c9a882;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.4) 0%, rgba(40, 167, 69, 0.2) 100%);
+            border: 2px solid rgba(40, 167, 69, 0.6);
+            border-radius: 0;
+            color: #f4e8d0;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0.4) 100%);
+            border-color: rgba(40, 167, 69, 0.9);
+            box-shadow: 0 0 20px rgba(40, 167, 69, 0.4);
+            transform: translateY(-2px);
+        }
+
+        button.secondary {
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.4) 0%, rgba(101, 67, 33, 0.2) 100%);
+            border-color: rgba(139, 69, 19, 0.6);
+        }
+
+        button.secondary:hover {
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.6) 0%, rgba(101, 67, 33, 0.4) 100%);
+            border-color: rgba(139, 69, 19, 0.9);
+            box-shadow: 0 0 20px rgba(139, 69, 19, 0.4);
+        }
+
+        .preview-section {
+            margin-top: 40px;
+            padding: 25px;
+            background: rgba(13, 5, 2, 0.6);
+            border: 2px solid rgba(184, 134, 11, 0.4);
+            border-radius: 0;
+        }
+
+        .preview-title {
+            font-size: 1.1rem;
+            color: #f4e8d0;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .json-preview {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 69, 19, 0.3);
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #c9a882;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 0;
+        }
+
+        .github-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.4) 0%, rgba(74, 144, 226, 0.2) 100%);
+            border: 2px solid rgba(74, 144, 226, 0.6);
+            border-radius: 0;
+            color: #f4e8d0;
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .github-link:hover {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.6) 0%, rgba(74, 144, 226, 0.4) 100%);
+            border-color: rgba(74, 144, 226, 0.9);
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .info-box {
+            background: rgba(40, 167, 69, 0.1);
+            border: 2px solid rgba(40, 167, 69, 0.3);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 0;
+        }
+
+        .info-box h3 {
+            color: #f4e8d0;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .info-box p {
+            color: #e8dcc6;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .info-box code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            font-family: 'Courier New', monospace;
+            color: #c9a882;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Vouch PR Demo</h1>
+            <p class="subtitle">Low-Code GitHub Integration - Create a PR with Pre-populated Data</p>
+        </header>
+
+        <div class="info-box">
+            <h3>📋 How It Works</h3>
+            <p>Fill out the form below to create a vouch object. When you click "Open GitHub PR", it will:</p>
+            <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                <li>Generate a JSON file with your vouch data</li>
+                <li>Copy the JSON to your clipboard automatically</li>
+                <li>Open GitHub's "New File" interface</li>
+                <li>Paste the JSON (Ctrl+V / Cmd+V) into the editor</li>
+                <li>Review and submit a Pull Request</li>
+            </ol>
+            <p style="margin-top: 15px;"><strong>No terminal required!</strong> GitHub handles the fork, branch, and PR automatically.</p>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="section-title">Create Your Vouch</h2>
+            
+            <form id="vouch-form">
+                <div class="form-group">
+                    <label for="vouch_id">Vouch ID <span class="required">*</span></label>
+                    <input type="text" id="vouch_id" name="vouch_id" required 
+                           placeholder="vouch-unique-identifier" 
+                           value="vouch-demo-001">
+                    <div class="help-text">Unique identifier for this vouch</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject_id">Subject ID <span class="required">*</span></label>
+                    <input type="text" id="subject_id" name="subject_id" required 
+                           placeholder="job-posting-id or opportunity-id"
+                           value="job-exergy-001">
+                    <div class="help-text">ID of the thing being vouched for (e.g., job posting ID)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="source_identity">Source Identity <span class="required">*</span></label>
+                    <input type="text" id="source_identity" name="source_identity" required 
+                           placeholder="github-uid-username"
+                           value="github-uid-demo-user">
+                    <div class="help-text">Your GitHub UID or Public Key</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="claim_type">Claim Type <span class="required">*</span></label>
+                    <select id="claim_type" name="claim_type" required>
+                        <option value="EXISTENCE">EXISTENCE - Thing exists</option>
+                        <option value="INTEGRITY" selected>INTEGRITY - Thing is legitimate</option>
+                        <option value="TERMS">TERMS - Terms are accurate</option>
+                    </select>
+                    <div class="help-text">What specifically is being vouched for</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="vouch_statement">Vouch Statement</label>
+                    <textarea id="vouch_statement" name="vouch_statement" 
+                              placeholder="Optional statement explaining your vouch...">This is a high-integrity opportunity with strong engineering culture and transparent hiring practices.</textarea>
+                    <div class="help-text">Optional statement from the voucher</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="evidence_link">Evidence Link</label>
+                    <input type="text" id="evidence_link" name="evidence_link" 
+                           placeholder="https://github.com/org/repo/commit/abc123"
+                           value="">
+                    <div class="help-text">Reference to a commit, file, or external proof</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="source_seniority">Source Seniority (days)</label>
+                    <input type="number" id="source_seniority" name="source_seniority" 
+                           min="0" placeholder="Account age in days"
+                           value="1825">
+                    <div class="help-text">Computed age of the source account in days</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="source_activity_index">Source Activity Index</label>
+                    <input type="number" id="source_activity_index" name="source_activity_index" 
+                           min="0" step="0.01" placeholder="0.00"
+                           value="0.95">
+                    <div class="help-text">Historical 'Proof of Work' metric (e.g., commits/contributions count)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="vouch_weight">Vouch Weight</label>
+                    <input type="number" id="vouch_weight" name="vouch_weight" 
+                           min="0" step="0.1" placeholder="0.0"
+                           value="4.8">
+                    <div class="help-text">The final 'force' this vouch applies to the Market Gravity</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="valid_from">Valid From <span class="required">*</span></label>
+                    <input type="date" id="valid_from" name="valid_from" required>
+                    <div class="help-text">Date from which the vouch is valid (YYYY-MM-DD)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="valid_until">Valid Until</label>
+                    <input type="date" id="valid_until" name="valid_until">
+                    <div class="help-text">Optional expiration date for time-based validity</div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" id="preview-btn" class="secondary">Preview JSON</button>
+                    <button type="button" id="github-pr-btn">Open GitHub PR</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="preview-section" id="preview-section" style="display: none;">
+            <div class="preview-title">Generated JSON Preview</div>
+            <div class="json-preview" id="json-preview"></div>
+            <a href="#" id="github-link" class="github-link" target="_blank" style="display: none;">Open in GitHub</a>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('vouch-form');
+        const previewBtn = document.getElementById('preview-btn');
+        const githubPrBtn = document.getElementById('github-pr-btn');
+        const previewSection = document.getElementById('preview-section');
+        const jsonPreview = document.getElementById('json-preview');
+        const githubLink = document.getElementById('github-link');
+
+        function generateVouchJSON() {
+            const formData = new FormData(form);
+            const vouch = {};
+            
+            // Required fields
+            vouch.vouch_id = formData.get('vouch_id');
+            vouch.subject_id = formData.get('subject_id');
+            vouch.source_identity = formData.get('source_identity');
+            vouch.claim_type = formData.get('claim_type');
+            vouch.valid_from = formData.get('valid_from');
+            
+            // Optional fields (only include if they have values)
+            const optionalFields = [
+                'vouch_statement',
+                'evidence_link',
+                'source_seniority',
+                'source_activity_index',
+                'vouch_weight',
+                'valid_until'
+            ];
+            
+            optionalFields.forEach(field => {
+                const value = formData.get(field);
+                if (value && value.trim() !== '') {
+                    if (field === 'source_seniority' || field === 'source_activity_index' || field === 'vouch_weight') {
+                        vouch[field] = parseFloat(value);
+                    } else {
+                        vouch[field] = value;
+                    }
+                }
+            });
+            
+            return JSON.stringify(vouch, null, 2);
+        }
+
+
+        function showPreview() {
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const json = generateVouchJSON();
+            jsonPreview.textContent = json;
+            previewSection.style.display = 'block';
+            
+            // Generate GitHub URL
+            const formData = new FormData(form);
+            const repo = 'exergy-connect/market-catalyst';
+            const branch = 'main'; // Use actual branch name (remote is main)
+            const path = 'examples/job-market/data/vouches'; // Move 'vouches' into the path
+            const filename = `${formData.get('vouch_id')}.json`; // Pure filename
+            const encodedContent = encodeURIComponent(json);
+            
+            // GitHub doesn't reliably support the 'value' parameter for pre-filling
+            // So we'll always copy to clipboard and open the new file page
+            const baseURL = `https://github.com/${repo}/new/${branch}/${path}?filename=${encodeURIComponent(filename)}`;
+            githubLink.href = baseURL;
+            githubLink.textContent = 'Open in GitHub (JSON will be copied to clipboard)';
+            githubLink.onclick = function(e) {
+                e.preventDefault();
+                // Copy JSON to clipboard
+                navigator.clipboard.writeText(json).then(() => {
+                    alert('✅ JSON copied to clipboard!\n\nOpening GitHub...\n\nPaste the JSON (Ctrl+V / Cmd+V) into the file editor.');
+                    window.open(baseURL, '_blank');
+                }).catch(() => {
+                    // Fallback: show JSON in alert if clipboard fails
+                    alert('Clipboard not available. Copy this JSON manually:\n\n' + json.substring(0, 500) + '...\n\nOpening GitHub...');
+                    window.open(baseURL, '_blank');
+                });
+            };
+            
+            githubLink.style.display = 'inline-block';
+        }
+
+        function openGitHubPR() {
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const json = generateVouchJSON();
+            const formData = new FormData(form);
+            const repo = 'exergy-connect/market-catalyst';
+            const path = 'examples/job-market/data/vouches'; // Move 'vouches' into the path
+            const filename = `${formData.get('vouch_id')}.json`; // Pure filename
+            
+            // Construct the URL to the "New File" view
+            const baseURL = `https://github.com/${repo}/new/main/${path}?filename=${encodeURIComponent(filename)}`;
+            
+            // Copy to clipboard with user feedback
+            navigator.clipboard.writeText(json).then(() => {
+                // Create a custom modal or use a more descriptive alert
+                const confirmed = confirm(
+                    "✅ Vouch Generated & Copied!\n\n" +
+                    "Next steps on GitHub:\n" +
+                    "1. Paste (Ctrl+V) into the editor\n" +
+                    "2. Click 'Commit changes...'\n" +
+                    "3. Select 'Create a new branch' and click 'Propose changes'\n\n" +
+                    "Proceed to GitHub?"
+                );
+                
+                if (confirmed) {
+                    window.open(baseURL, '_blank');
+                }
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert("Clipboard error. Please copy the JSON from the preview box manually before clicking 'Open'.");
+            });
+        }
+
+        // Set valid_from to today's date
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        document.getElementById('valid_from').value = todayStr;
+
+        previewBtn.addEventListener('click', showPreview);
+        githubPrBtn.addEventListener('click', openGitHubPR);
+        
+        // Auto-preview on form change
+        form.addEventListener('input', () => {
+            if (previewSection.style.display === 'block') {
+                showPreview();
+            }
+        });
+    </script>
+</body>
+</html>

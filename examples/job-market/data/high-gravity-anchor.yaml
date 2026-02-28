@@ -1,0 +1,55 @@
+# High-Gravity Anchor Example
+# This represents a high-integrity opportunity where the GitHub identity of a senior contributor stabilizes the market.
+
+company:
+  - company_id: "company-exergy-tech"
+    company_name: "Exergy Tech"
+    domain: "exergy.tech"
+    industry: "Technology"
+    location: "Remote"
+
+job_posting:
+  - job_posting_id: "job-exergy-001"
+    company_id: "company-exergy-tech"
+    job_title: "Senior Systems Architect"
+    job_description: "Lead systems architecture for open-source infrastructure projects"
+    posted_date: "2024-02-27"
+    location: "Remote"
+    employment_type: "Full-time"
+    advertised_salary_min: 160000
+    advertised_salary_currency: "USD"
+    promises:
+      - promise_id: "promise-timeline-001"
+        job_posting_id: "job-exergy-001"
+        promise_type: "Response Timeline"
+        promise_text: "We'll respond within 7 days"
+        promised_timeline_days: 7
+      - promise_id: "promise-salary-001"
+        job_posting_id: "job-exergy-001"
+        promise_type: "Salary Range"
+        promise_text: "Salary range $160,000+"
+        promised_value_min: 160000
+
+vouch:
+  - vouch_id: "vouch-integrity-001"
+    subject_id: "job-exergy-001"
+    source_identity: "github-uid-octocat-99"
+    claim_type: "INTEGRITY"
+    source_seniority: 3200
+    source_activity_index: 0.95
+    vouch_weight: 4.8
+    valid_from: "2024-02-27"
+    vouch_statement: "High-integrity opportunity with strong engineering culture"
+
+personal_vouch:
+  - vouch_id: "personal-vouch-001"
+    job_posting_id: "job-exergy-001"
+    core_vouch_id: "vouch-integrity-001"
+    source_identity: "github-uid-octocat-99"
+    claim_type: "INTEGRITY"
+    source_seniority: 3200
+    source_activity_index: 0.95
+    vouch_weight: 4.8
+    valid_from: "2024-02-27"
+    voucher_relationship: "Current Employee"
+    vouch_statement: "The engineering culture here matches the open-source values Sarah advocates for. I am personally overseeing this hiring loop."

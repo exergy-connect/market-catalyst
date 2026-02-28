@@ -1,0 +1,113 @@
+name: "Job Market Trust Infrastructure Model"
+version: "26.02.27.1"
+author: "Market Catalyst - Job Market"
+allow_unlimited_fields: true
+include_x_fields: true
+
+entities:
+  - name: review
+    brief: "Yelp-style structured review of hiring experience"
+    description: |
+      Structured, verifiable reviews of hiring experiences. These are not free-text
+      reviews but structured data points that can be cross-verified. Based on
+      three dimensions: Transparency (were promises kept?), Experiential Respect
+      (was humanity honored?), and Time Efficiency (was effort proportional to outcome?).
+      These reviews feed into all interface views: Trust Stock Market, Google Maps,
+      Wikipedia, and Simple Signals.
+    primary_key: review_id
+    parents:
+      - child_fk: company_id
+        parent_array: reviews
+    fields:
+      - name: review_id
+        type: string
+        required: true
+        description: "Unique review identifier"
+      
+      - name: company_id
+        type: string
+        required: true
+        foreignKeys:
+          - entity: company
+        description: "Reference to the company being reviewed"
+      
+      - name: application_id
+        type: string
+        required: false
+        foreignKeys:
+          - entity: application
+        description: "Reference to the application this review is based on"
+      
+      - name: review_date
+        type: date
+        required: true
+        description: "Date the review was submitted (YYYY-MM-DD)"
+      
+      - name: transparency_score
+        type: integer
+        required: false
+        min: 1
+        max: 5
+        description: "Transparency score (1-5): Were promises kept? Were timelines accurate?"
+      
+      - name: respect_score
+        type: integer
+        required: false
+        min: 1
+        max: 5
+        description: "Experiential respect score (1-5): Was humanity honored? Was communication respectful?"
+      
+      - name: efficiency_score
+        type: integer
+        required: false
+        min: 1
+        max: 5
+        description: "Time efficiency score (1-5): Was effort proportional to outcome?"
+      
+      - name: overall_score
+        type: number
+        required: false
+        min: 1
+        max: 5
+        description: "Overall score (average of transparency, respect, and efficiency scores, computed at application layer)"
+      
+      - name: was_ghosted
+        type: boolean
+        required: false
+        description: "Whether the applicant was ghosted (no response after engagement)"
+      
+      - name: response_received
+        type: boolean
+        required: false
+        description: "Whether any response was received"
+      
+      - name: offer_received
+        type: boolean
+        required: false
+        description: "Whether an offer was received"
+      
+      - name: offer_salary
+        type: number
+        required: false
+        description: "Offer salary amount (if offer received)"
+      
+      - name: offer_pct_below
+        type: number
+        required: false
+        description: "Percentage below advertised minimum (computed from offer_salary vs advertised range, if applicable)"
+      
+      - name: go_nogo_signal
+        type: string
+        required: false
+        enum:
+          - GO
+          - NO-GO
+          - CAUTION
+        description: "Simple go/no-go signal for quick decision making"
+      
+      - name: verification
+        type: array
+        required: false
+        item_type:
+          entity: verification
+        description: "Verification data for this review (nested children)"

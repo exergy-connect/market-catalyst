@@ -1,0 +1,700 @@
+{
+  "$schema": "http://json-schema.org/draft-2020-12/schema",
+  "title": "Consolidated Data Model",
+  "description": "Consolidated entity schemas from data model files",
+  "$defs": {
+    "application": {
+      "type": "object",
+      "properties": {
+        "application_id": {
+          "type": "string",
+          "description": "Unique application identifier"
+        },
+        "job_posting_id": {
+          "type": "string",
+          "description": "Reference to the job posting this application is for"
+        },
+        "submitted_date": {
+          "type": "string",
+          "description": "Date the application was submitted (YYYY-MM-DD)",
+          "format": "date"
+        },
+        "submitted_datetime": {
+          "type": "string",
+          "description": "Full date and time of submission",
+          "format": "date-time"
+        },
+        "applicant_id": {
+          "type": "string",
+          "description": "Anonymous or pseudonymous applicant identifier (for privacy)"
+        },
+        "timeline": {
+          "type": "array",
+          "description": "Timeline events for this application (nested children)",
+          "items": {
+            "$ref": "#/$defs/application_timeline"
+          }
+        },
+        "review_id": {
+          "type": "string",
+          "description": "Reference to review created from this application experience"
+        }
+      },
+      "required": [
+        "application_id",
+        "job_posting_id",
+        "submitted_date"
+      ],
+      "x-primaryKey": "application_id",
+      "x-created": 1,
+      "x-version": 1
+    },
+    "application_timeline": {
+      "type": "object",
+      "properties": {
+        "timeline_event_id": {
+          "type": "string",
+          "description": "Unique timeline event identifier"
+        },
+        "application_id": {
+          "type": "string",
+          "description": "Reference to the application this event belongs to"
+        },
+        "event_date": {
+          "type": "string",
+          "description": "Date the event occurred (YYYY-MM-DD)",
+          "format": "date"
+        },
+        "event_datetime": {
+          "type": "string",
+          "description": "Full date and time of the event",
+          "format": "date-time"
+        },
+        "event_type": {
+          "type": "string",
+          "description": "Type of timeline event",
+          "enum": [
+            "Application Submitted",
+            "First Response",
+            "Acknowledgment Received",
+            "Screening Call",
+            "Technical Interview",
+            "Behavioral Interview",
+            "Final Interview",
+            "Offer Extended",
+            "Offer Accepted",
+            "Offer Rejected",
+            "Rejection Received",
+            "Ghosted",
+            "Withdrawn"
+          ]
+        },
+        "response_time_days": {
+          "type": "integer",
+          "description": "Days from application submission to this event (computed from event_date - application.submitted_date)"
+        },
+        "was_promise_kept": {
+          "type": "boolean",
+          "description": "Whether a timeline promise was kept (if applicable)"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional notes about the event (structured, not free-text review)"
+        }
+      },
+      "required": [
+        "timeline_event_id",
+        "application_id",
+        "event_date",
+        "event_type"
+      ],
+      "x-primaryKey": "timeline_event_id",
+      "x-created": 1,
+      "x-version": 1
+    },
+    "company": {
+      "type": "object",
+      "properties": {
+        "company_id": {
+          "type": "string",
+          "description": "Unique company identifier (e.g., domain name, organization ID)"
+        },
+        "company_name": {
+          "type": "string",
+          "description": "Official company name"
+        },
+        "domain": {
+          "type": "string",
+          "description": "Company website domain (e.g., 'acme.com')"
+        },
+        "industry": {
+          "type": "string",
+          "description": "Industry sector (e.g., 'Technology', 'Finance', 'Healthcare')"
+        },
+        "location": {
+          "type": "string",
+          "description": "Primary location or headquarters"
+        },
+        "job_postings": {
+          "type": "array",
+          "description": "Job postings for this company (nested children)",
+          "items": {
+            "$ref": "#/$defs/job_posting"
+          }
+        },
+        "reviews": {
+          "type": "array",
+          "description": "Reviews for this company (nested children)",
+          "items": {
+            "$ref": "#/$defs/review"
+          }
+        }
+      },
+      "required": [
+        "company_id",
+        "company_name"
+      ],
+      "x-primaryKey": "company_id",
+      "x-created": 1,
+      "x-version": 1
+    },
+    "job_posting": {
+      "type": "object",
+      "properties": {
+        "job_posting_id": {
+          "type": "string",
+          "description": "Unique job posting identifier (e.g., job board ID, internal ID)"
+        },
+        "company_id": {
+          "type": "string",
+          "description": "Reference to the company posting this job"
+        },
+        "job_title": {
+          "type": "string",
+          "description": "Job title or position name"
+        },
+        "job_description": {
+          "type": "string",
+          "description": "Full job description text"
+        },
+        "posted_date": {
+          "type": "string",
+          "description": "Date the job was posted (YYYY-MM-DD)",
+          "format": "date"
+        },
+        "advertised_salary_min": {
+          "type": "number",
+          "description": "Advertised minimum salary (if range provided)"
+        },
+        "advertised_salary_max": {
+          "type": "number",
+          "description": "Advertised maximum salary (if range provided)"
+        },
+        "advertised_salary_currency": {
+          "type": "string",
+          "description": "Currency code (e.g., 'USD', 'EUR')"
+        },
+        "location": {
+          "type": "string",
+          "description": "Job location (city, state, remote, etc.)"
+        },
+        "employment_type": {
+          "type": "string",
+          "description": "Type of employment",
+          "enum": [
+            "Full-time",
+            "Part-time",
+            "Contract",
+            "Internship",
+            "Temporary"
+          ]
+        },
+        "applications": {
+          "type": "array",
+          "description": "Applications submitted for this job posting (nested children)",
+          "items": {
+            "$ref": "#/$defs/application"
+          }
+        },
+        "promises": {
+          "type": "array",
+          "description": "Promises made in this job posting (nested children)",
+          "items": {
+            "$ref": "#/$defs/promise"
+          }
+        },
+        "personal_vouches": {
+          "type": "array",
+          "description": "Personal vouches from people who believe this is a real opportunity (nested children)",
+          "items": {
+            "$ref": "#/$defs/personal_vouch"
+          }
+        }
+      },
+      "required": [
+        "job_posting_id",
+        "company_id",
+        "job_title"
+      ],
+      "x-primaryKey": "job_posting_id",
+      "x-created": 1,
+      "x-version": 1
+    },
+    "personal_vouch": {
+      "type": "object",
+      "properties": {
+        "vouch_id": {
+          "type": "string",
+          "description": "Unique vouch identifier (matches core vouch.vouch_id if linked)"
+        },
+        "job_posting_id": {
+          "type": "string",
+          "description": "Reference to the job posting being vouched for (subject_id in core vouch)"
+        },
+        "core_vouch_id": {
+          "type": "string",
+          "description": "Optional reference to core vouch entity for reputation weighting and revocation"
+        },
+        "source_identity": {
+          "type": "string",
+          "description": "GitHub UID or Public Key of the voucher (from core vouch concept)"
+        },
+        "claim_type": {
+          "type": "string",
+          "description": "What specifically is being vouched for (from core vouch: EXISTENCE, INTEGRITY, TERMS)",
+          "enum": [
+            "EXISTENCE",
+            "INTEGRITY",
+            "TERMS"
+          ]
+        },
+        "evidence_link": {
+          "type": "string",
+          "description": "Reference to a commit, file, or external proof that supports the claim (from core vouch)"
+        },
+        "source_seniority": {
+          "type": "integer",
+          "description": "Computed age of the source account in days (e.g., GitHub account age). Used for reputation weighting.",
+          "minimum": 0
+        },
+        "source_activity_index": {
+          "type": "number",
+          "description": "Historical 'Proof of Work' metric (e.g., commits/contributions count). Used for reputation weighting.",
+          "minimum": 0
+        },
+        "vouch_weight": {
+          "type": "number",
+          "description": "The final 'force' this vouch applies to the Market Gravity. Computed from source reputation metrics.",
+          "minimum": 0
+        },
+        "valid_from": {
+          "type": "string",
+          "description": "Date from which the vouch is valid (YYYY-MM-DD). Ensures vouches don't stay 'green' if market conditions change.",
+          "format": "date"
+        },
+        "valid_until": {
+          "type": "string",
+          "description": "Date until which the vouch is valid (YYYY-MM-DD). Optional expiration date for time-based validity.",
+          "format": "date"
+        },
+        "revocation_digest": {
+          "type": "string",
+          "description": "If the voucher discovers the 'Originator' lied, they can issue a 'Revocation' which is appended to the ledger, immediately flipping the go_nogo_signal. This is a cryptographic digest/hash of the revocation."
+        },
+        "revoked_date": {
+          "type": "string",
+          "description": "Date when the vouch was revoked (YYYY-MM-DD), if applicable",
+          "format": "date"
+        },
+        "voucher_relationship": {
+          "type": "string",
+          "description": "Job market specific: Relationship of the voucher to the company/position",
+          "enum": [
+            "Current Employee",
+            "Former Employee",
+            "Industry Contact",
+            "Recruiter",
+            "Referral Source",
+            "Other"
+          ]
+        },
+        "confidence_level": {
+          "type": "integer",
+          "description": "Job market specific: Confidence level (1-5) of the voucher in the legitimacy of the posting",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "vouch_statement": {
+          "type": "string",
+          "description": "Optional statement from the voucher explaining why they believe this is a real opportunity"
+        },
+        "is_verified": {
+          "type": "boolean",
+          "description": "Whether the vouch has been verified (e.g., through cross-referencing or evidence)"
+        },
+        "verification_notes": {
+          "type": "string",
+          "description": "Notes about verification of the vouch"
+        }
+      },
+      "required": [
+        "vouch_id",
+        "job_posting_id",
+        "source_identity",
+        "claim_type",
+        "valid_from"
+      ],
+      "x-primaryKey": "vouch_id",
+      "x-created": 1,
+      "x-version": 1
+    },
+    "promise": {
+      "type": "object",
+      "properties": {
+        "promise_id": {
+          "type": "string",
+          "description": "Unique promise identifier"
+        },
+        "job_posting_id": {
+          "type": "string",
+          "description": "Reference to job posting where promise was made"
+        },
+        "promise_type": {
+          "type": "string",
+          "description": "Type of promise made",
+          "enum": [
+            "Salary Range",
+            "Response Timeline",
+            "Process Steps",
+            "Benefits",
+            "Work Arrangement",
+            "Other"
+          ]
+        },
+        "promise_text": {
+          "type": "string",
+          "description": "Text of the promise (e.g., 'We'll respond within 2 weeks')"
+        },
+        "promised_value_min": {
+          "type": "number",
+          "description": "Minimum promised value (for numeric promises like salary)"
+        },
+        "promised_value_max": {
+          "type": "number",
+          "description": "Maximum promised value (for numeric promises like salary)"
+        },
+        "promised_timeline_days": {
+          "type": "integer",
+          "description": "Promised timeline in days (e.g., 14 for '2 weeks')"
+        },
+        "was_kept": {
+          "type": "boolean",
+          "description": "Whether the promise was kept (verified against actual outcomes)"
+        },
+        "verification_date": {
+          "type": "string",
+          "description": "Date when promise fulfillment was verified (YYYY-MM-DD)",
+          "format": "date"
+        }
+      },
+      "required": [
+        "promise_id",
+        "job_posting_id",
+        "promise_type",
+        "promise_text"
+      ],
+      "x-primaryKey": "promise_id",
+      "x-created": 1,
+      "x-version": 1
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "review_id": {
+          "type": "string",
+          "description": "Unique review identifier"
+        },
+        "company_id": {
+          "type": "string",
+          "description": "Reference to the company being reviewed"
+        },
+        "application_id": {
+          "type": "string",
+          "description": "Reference to the application this review is based on"
+        },
+        "review_date": {
+          "type": "string",
+          "description": "Date the review was submitted (YYYY-MM-DD)",
+          "format": "date"
+        },
+        "transparency_score": {
+          "type": "integer",
+          "description": "Transparency score (1-5): Were promises kept? Were timelines accurate?",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "respect_score": {
+          "type": "integer",
+          "description": "Experiential respect score (1-5): Was humanity honored? Was communication respectful?",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "efficiency_score": {
+          "type": "integer",
+          "description": "Time efficiency score (1-5): Was effort proportional to outcome?",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "overall_score": {
+          "type": "number",
+          "description": "Overall score (average of transparency, respect, and efficiency scores, computed at application layer)",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "was_ghosted": {
+          "type": "boolean",
+          "description": "Whether the applicant was ghosted (no response after engagement)"
+        },
+        "response_received": {
+          "type": "boolean",
+          "description": "Whether any response was received"
+        },
+        "offer_received": {
+          "type": "boolean",
+          "description": "Whether an offer was received"
+        },
+        "offer_salary": {
+          "type": "number",
+          "description": "Offer salary amount (if offer received)"
+        },
+        "offer_pct_below": {
+          "type": "number",
+          "description": "Percentage below advertised minimum (computed from offer_salary vs advertised range, if applicable)"
+        },
+        "go_nogo_signal": {
+          "type": "string",
+          "description": "Simple go/no-go signal for quick decision making",
+          "enum": [
+            "GO",
+            "NO-GO",
+            "CAUTION"
+          ]
+        },
+        "verification": {
+          "type": "array",
+          "description": "Verification data for this review (nested children)",
+          "items": {
+            "$ref": "#/$defs/verification"
+          }
+        }
+      },
+      "required": [
+        "review_id",
+        "company_id",
+        "review_date"
+      ],
+      "x-primaryKey": "review_id",
+      "x-created": 1,
+      "x-version": 1
+    },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "verification_id": {
+          "type": "string",
+          "description": "Unique verification record identifier"
+        },
+        "review_id": {
+          "type": "string",
+          "description": "Reference to the review being verified"
+        },
+        "verification_date": {
+          "type": "string",
+          "description": "Date verification was performed (YYYY-MM-DD)",
+          "format": "date"
+        },
+        "verification_method": {
+          "type": "string",
+          "description": "Method of verification used",
+          "enum": [
+            "Cross-Reference",
+            "Evidence Weighting",
+            "Manipulation Detection",
+            "Consistency Check",
+            "Anonymity Check"
+          ]
+        },
+        "is_consistent": {
+          "type": "boolean",
+          "description": "Whether review is consistent with other reports"
+        },
+        "verifiability_weight": {
+          "type": "number",
+          "description": "Weight assigned based on verifiability (0.0 to 1.0)",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "manipulation_risk_score": {
+          "type": "number",
+          "description": "Risk score for manipulation (0.0 = low risk, 1.0 = high risk)",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "cross_reference_count": {
+          "type": "integer",
+          "description": "Number of other reviews that cross-reference this one",
+          "minimum": 0
+        },
+        "notes": {
+          "type": "string",
+          "description": "Verification notes or flags"
+        }
+      },
+      "required": [
+        "verification_id",
+        "review_id",
+        "verification_date",
+        "verification_method"
+      ],
+      "x-primaryKey": "verification_id",
+      "x-created": 1,
+      "x-version": 1
+    },
+    "vouch": {
+      "type": "object",
+      "properties": {
+        "vouch_id": {
+          "type": "string",
+          "description": "Unique vouch identifier"
+        },
+        "subject_id": {
+          "type": "string",
+          "description": "Unique identifier of the thing being vouched for (the 'Opportunity' or subject)"
+        },
+        "source_identity": {
+          "type": "string",
+          "description": "GitHub UID or Public Key of the voucher (the source making the vouch)"
+        },
+        "claim_type": {
+          "type": "string",
+          "description": "What specifically is being vouched for (EXISTENCE: thing exists, INTEGRITY: thing is legitimate, TERMS: terms are accurate)",
+          "enum": [
+            "EXISTENCE",
+            "INTEGRITY",
+            "TERMS"
+          ]
+        },
+        "evidence_link": {
+          "type": "string",
+          "description": "Reference to a commit, file, or external proof that supports the claim"
+        },
+        "source_seniority": {
+          "type": "integer",
+          "description": "Computed age of the source account in days (e.g., GitHub account age). Used for reputation weighting.",
+          "minimum": 0
+        },
+        "source_activity_index": {
+          "type": "number",
+          "description": "Historical 'Proof of Work' metric (e.g., commits/contributions count). Used for reputation weighting.",
+          "minimum": 0
+        },
+        "vouch_weight": {
+          "type": "number",
+          "description": "The final 'force' this vouch applies to the Market Gravity. Computed from source reputation metrics.",
+          "minimum": 0
+        },
+        "valid_from": {
+          "type": "string",
+          "description": "Date from which the vouch is valid (YYYY-MM-DD). Ensures vouches don't stay 'green' if market conditions change.",
+          "format": "date"
+        },
+        "valid_until": {
+          "type": "string",
+          "description": "Date until which the vouch is valid (YYYY-MM-DD). Optional expiration date for time-based validity.",
+          "format": "date"
+        },
+        "revocation_digest": {
+          "type": "string",
+          "description": "If the voucher discovers the 'Originator' lied, they can issue a 'Revocation' which is appended to the ledger, immediately flipping the go_nogo_signal. This is a cryptographic digest/hash of the revocation."
+        },
+        "revoked_date": {
+          "type": "string",
+          "description": "Date when the vouch was revoked (YYYY-MM-DD), if applicable",
+          "format": "date"
+        },
+        "vouch_statement": {
+          "type": "string",
+          "description": "Optional statement from the voucher explaining the vouch"
+        }
+      },
+      "required": [
+        "vouch_id",
+        "subject_id",
+        "source_identity",
+        "claim_type",
+        "valid_from"
+      ],
+      "x-primaryKey": "vouch_id",
+      "x-created": 1,
+      "x-version": 1
+    }
+  },
+  "type": "object",
+  "properties": {
+    "application": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/application"
+      }
+    },
+    "application_timeline": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/application_timeline"
+      }
+    },
+    "company": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/company"
+      }
+    },
+    "job_posting": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/job_posting"
+      }
+    },
+    "personal_vouch": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/personal_vouch"
+      }
+    },
+    "promise": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/promise"
+      }
+    },
+    "review": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/review"
+      }
+    },
+    "verification": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/verification"
+      }
+    },
+    "vouch": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/vouch"
+      }
+    }
+  },
+  "additionalProperties": false
+}

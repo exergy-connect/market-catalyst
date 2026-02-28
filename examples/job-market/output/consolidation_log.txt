@@ -1,0 +1,36 @@
+2026-02-27 22:37:21 [INFO] Logging to: examples/job-market/output/consolidation_log.txt
+2026-02-27 22:37:21 [INFO] Step 1: Consolidating models from: examples/job-market/model
+2026-02-27 22:37:21 [INFO] Validating consolidated models with YANG validator
+2026-02-27 22:37:21 [INFO] ✓ YANG validation passed for consolidated models
+2026-02-27 22:37:21 [INFO] Wrote consolidated data to examples/job-market/output/consolidated_model.js
+2026-02-27 22:37:21 [INFO] ✓ Consolidated model written to: examples/job-market/output/consolidated_model.json
+2026-02-27 22:37:21 [INFO] Model consolidation completed successfully (exit code: 0)
+2026-02-27 22:37:21 [INFO] Step 1 completed in 0.81 seconds
+2026-02-27 22:37:22 [INFO] Step 2: Consolidating data from: examples/job-market/data
+2026-02-27 22:37:22 [INFO] Validating consolidated models with YANG validator
+2026-02-27 22:37:22 [INFO] ✓ YANG validation passed for consolidated models
+2026-02-27 22:37:22 [INFO] Loading data files from: examples/job-market/data
+2026-02-27 22:37:22 [INFO] Processing 1 data file(s) from examples/job-market/data
+2026-02-27 22:37:22 [WARNING] Entity 'promise' has explicit parent foreign key 'job_posting_id' = 'job-exergy-001' that is redundant (implied by hierarchical nesting via parents). Consider removing this field from the data file.
+2026-02-27 22:37:22 [WARNING] Entity 'promise' has explicit parent foreign key 'job_posting_id' = 'job-exergy-001' that is redundant (implied by hierarchical nesting via parents). Consider removing this field from the data file.
+2026-02-27 22:37:22 [INFO] Loaded 6 entity instance(s) from /home/jeroen/Projects/market-catalyst/examples/job-market/data/high-gravity-anchor.yaml (entities: company, promise, job_posting, vouch, personal_vouch)
+2026-02-27 22:37:22 [INFO] Loaded data from 1 files (bulk validation)
+2026-02-27 22:37:22 [INFO] Data loading completed in 0.01 seconds
+2026-02-27 22:37:22 [INFO] ============================================================
+2026-02-27 22:37:22 [INFO] Validation Summary Report
+2026-02-27 22:37:22 [INFO] ============================================================
+2026-02-27 22:37:22 [INFO] Total entities validated: 6
+2026-02-27 22:37:22 [INFO] Entities validated by type:
+2026-02-27 22:37:22 [INFO]   - company: 1
+2026-02-27 22:37:22 [INFO]   - job_posting: 1
+2026-02-27 22:37:22 [INFO]   - personal_vouch: 1
+2026-02-27 22:37:22 [INFO]   - promise: 2
+2026-02-27 22:37:22 [INFO]   - vouch: 1
+2026-02-27 22:37:22 [INFO] ✓ No validation errors - all entities validated successfully
+2026-02-27 22:37:22 [INFO] ============================================================
+2026-02-27 22:37:22 [INFO] Calculating computed fields
+2026-02-27 22:37:22 [INFO] Wrote consolidated data to examples/job-market/output/consolidated_data.json (2 entities across 10 entity types)
+2026-02-27 22:37:22 [INFO] Wrote consolidated data to examples/job-market/output/consolidated_data.js
+2026-02-27 22:37:22 [INFO] ✓ Successfully consolidated data into examples/job-market/output/consolidated_data.json
+2026-02-27 22:37:22 [INFO] Data consolidation completed successfully (exit code: 0)
+2026-02-27 22:37:22 [INFO] Consolidation completed successfully (exit code: 0)

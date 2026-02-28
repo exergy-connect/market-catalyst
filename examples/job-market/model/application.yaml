@@ -1,0 +1,58 @@
+name: "Job Market Trust Infrastructure Model"
+version: "26.02.27.1"
+author: "Market Catalyst - Job Market"
+allow_unlimited_fields: true
+include_x_fields: true
+
+entities:
+  - name: application
+    brief: "Job application submitted by an applicant"
+    description: |
+      Structured record of a job application submission. Tracks when applications
+      were submitted and links to timeline events (responses, interviews, outcomes).
+      This is the core data point for tracking hiring process transparency.
+    primary_key: application_id
+    parents:
+      - child_fk: job_posting_id
+        parent_array: applications
+    fields:
+      - name: application_id
+        type: string
+        required: true
+        description: "Unique application identifier"
+      
+      - name: job_posting_id
+        type: string
+        required: true
+        foreignKeys:
+          - entity: job_posting
+        description: "Reference to the job posting this application is for"
+      
+      - name: submitted_date
+        type: date
+        required: true
+        description: "Date the application was submitted (YYYY-MM-DD)"
+      
+      - name: submitted_datetime
+        type: datetime
+        required: false
+        description: "Full date and time of submission"
+      
+      - name: applicant_id
+        type: string
+        required: false
+        description: "Anonymous or pseudonymous applicant identifier (for privacy)"
+      
+      - name: timeline
+        type: array
+        required: false
+        item_type:
+          entity: application_timeline
+        description: "Timeline events for this application (nested children)"
+      
+      - name: review_id
+        type: string
+        required: false
+        foreignKeys:
+          - entity: review
+        description: "Reference to review created from this application experience"
