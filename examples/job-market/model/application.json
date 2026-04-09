@@ -1,0 +1,92 @@
+{
+  "name": "Job Market Trust Infrastructure Model",
+  "version": "26.02.27.1",
+  "author": "Market Catalyst - Job Market",
+  "description": "Job Market Trust Infrastructure: structured hiring transparency, promises, reviews, and verification.",
+  "include_x_fields": true,
+  "entities": [
+    {
+      "name": "application",
+      "brief": "Job application submitted by an applicant",
+      "description": "Structured record of a job application submission. Tracks when applications\nwere submitted and links to timeline events (responses, interviews, outcomes).\nThis is the core data point for tracking hiring process transparency.\n",
+      "primary_key": "application_id",
+      "parents": [
+        {
+          "child_fk": "job_posting_id",
+          "parent_array": "applications"
+        }
+      ],
+      "fields": [
+        {
+          "name": "application_id",
+          "type": {
+            "primitive": "string"
+          },
+          "required": true,
+          "description": "Unique application identifier"
+        },
+        {
+          "name": "job_posting_id",
+          "type": {
+            "primitive": "string",
+            "foreignKeys": [
+              {
+                "entity": "job_posting",
+                "parent_array": "applications"
+              }
+            ]
+          },
+          "required": true,
+          "description": "Reference to the job posting this application is for"
+        },
+        {
+          "name": "submitted_date",
+          "type": {
+            "primitive": "date"
+          },
+          "required": true,
+          "description": "Date the application was submitted (YYYY-MM-DD)"
+        },
+        {
+          "name": "submitted_datetime",
+          "type": {
+            "primitive": "datetime"
+          },
+          "required": false,
+          "description": "Full date and time of submission"
+        },
+        {
+          "name": "applicant_id",
+          "type": {
+            "primitive": "string"
+          },
+          "required": false,
+          "description": "Anonymous or pseudonymous applicant identifier (for privacy)"
+        },
+        {
+          "name": "timeline",
+          "type": {
+            "array": {
+              "entity": "application_timeline"
+            }
+          },
+          "required": false,
+          "description": "Timeline events for this application (nested children)"
+        },
+        {
+          "name": "review_id",
+          "type": {
+            "primitive": "string",
+            "foreignKeys": [
+              {
+                "entity": "review"
+              }
+            ]
+          },
+          "required": false,
+          "description": "Reference to review created from this application experience"
+        }
+      ]
+    }
+  ]
+}

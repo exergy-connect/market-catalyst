@@ -1,0 +1,147 @@
+{
+  "name": "Job Market Trust Infrastructure Model",
+  "version": "26.02.27.1",
+  "author": "Market Catalyst - Job Market",
+  "description": "Job Market Trust Infrastructure: structured hiring transparency, promises, reviews, and verification.",
+  "allow_unlimited_fields": true,
+  "include_x_fields": true,
+  "entities": [
+    {
+      "name": "job_posting",
+      "brief": "Job posting or job listing",
+      "description": "Individual job postings with advertised details including salary ranges,\nrequirements, and timeline promises. These postings are linked to\napplications and reviews.\n",
+      "primary_key": "job_posting_id",
+      "parents": [
+        {
+          "child_fk": "company_id",
+          "parent_array": "job_postings"
+        }
+      ],
+      "fields": [
+        {
+          "name": "job_posting_id",
+          "type": {
+            "primitive": "string"
+          },
+          "required": true,
+          "description": "Unique job posting identifier (e.g., job board ID, internal ID)"
+        },
+        {
+          "name": "company_id",
+          "type": {
+            "primitive": "string",
+            "foreignKeys": [
+              {
+                "entity": "company",
+                "parent_array": "job_postings"
+              }
+            ]
+          },
+          "required": true,
+          "description": "Reference to the company posting this job"
+        },
+        {
+          "name": "job_title",
+          "type": {
+            "primitive": "string"
+          },
+          "required": true,
+          "description": "Job title or position name"
+        },
+        {
+          "name": "job_description",
+          "type": {
+            "primitive": "string"
+          },
+          "required": false,
+          "description": "Full job description text"
+        },
+        {
+          "name": "posted_date",
+          "type": {
+            "primitive": "date"
+          },
+          "required": false,
+          "description": "Date the job was posted (YYYY-MM-DD)"
+        },
+        {
+          "name": "advertised_salary_min",
+          "type": {
+            "primitive": "number"
+          },
+          "required": false,
+          "description": "Advertised minimum salary (if range provided)"
+        },
+        {
+          "name": "advertised_salary_max",
+          "type": {
+            "primitive": "number"
+          },
+          "required": false,
+          "description": "Advertised maximum salary (if range provided)"
+        },
+        {
+          "name": "advertised_salary_currency",
+          "type": {
+            "primitive": "string"
+          },
+          "required": false,
+          "description": "Currency code (e.g., 'USD', 'EUR')"
+        },
+        {
+          "name": "location",
+          "type": {
+            "primitive": "string"
+          },
+          "required": false,
+          "description": "Job location (city, state, remote, etc.)"
+        },
+        {
+          "name": "employment_type",
+          "type": {
+            "primitive": "string",
+            "enum": [
+              "Full-time",
+              "Part-time",
+              "Contract",
+              "Internship",
+              "Temporary"
+            ]
+          },
+          "required": false,
+          "description": "Type of employment"
+        },
+        {
+          "name": "applications",
+          "type": {
+            "array": {
+              "entity": "application"
+            }
+          },
+          "required": false,
+          "description": "Applications submitted for this job posting (nested children)"
+        },
+        {
+          "name": "promises",
+          "type": {
+            "array": {
+              "entity": "promise"
+            }
+          },
+          "required": false,
+          "description": "Promises made in this job posting (nested children)"
+        },
+        {
+          "name": "personal_vouches",
+          "type": {
+            "array": {
+              "entity": "personal_vouch"
+            }
+          },
+          "required": false,
+          "description": "Personal vouches from people who believe this is a real opportunity (nested children)"
+        }
+      ]
+    }
+  ]
+}

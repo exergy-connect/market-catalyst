@@ -1,10 +1,11 @@
 {
-  "version": 11,
-  "timestamp": "2026-02-28T04:37:22.630857+00:00",
+  "version": 13,
+  "timestamp": "2026-04-09T20:41:35Z",
   "model": {
-    "name": "Market Catalyst Core Model",
+    "name": "Job Market Trust Infrastructure Model",
     "version": "26.02.27.1",
-    "author": "Market Catalyst",
+    "author": "Market Catalyst - Job Market",
+    "description": "Job Market Trust Infrastructure: structured hiring transparency, promises, reviews, and verification.",
     "include_x_fields": true,
     "max_name_underscores": 2,
     "exclude": null
@@ -16,6 +17,20 @@
         "timestamp": "2026-02-27T22:37:22.630637",
         "author": "jeroen",
         "note": "Consolidate high-gravity anchor example data with JavaScript output"
+      },
+      "000000000012": {
+        "id": 12,
+        "timestamp": "2026-04-09T15:40:32-05:00",
+        "author": "root",
+        "note": "(no change) Job-market example: merge core + market model JSON; consolidate sample data",
+        "git_commit_hash": "9f177b140d7101af7891348f7275e65e3f992121"
+      },
+      "000000000013": {
+        "id": 13,
+        "timestamp": "2026-04-09T15:41:35-05:00",
+        "author": "root",
+        "note": "(no change) Data: omit redundant promise.job_posting_id under nested job_posting",
+        "git_commit_hash": "9f177b140d7101af7891348f7275e65e3f992121"
       }
     },
     "company": {
@@ -25,34 +40,30 @@
         "domain": "exergy.tech",
         "industry": "Technology",
         "location": "Remote",
-        "c": 10,
-        "v": 10,
         "job_postings": [
           {
             "job_posting_id": "job-exergy-001",
             "job_title": "Senior Systems Architect",
             "job_description": "Lead systems architecture for open-source infrastructure projects",
             "posted_date": "2024-02-27",
-            "location": "Remote",
-            "employment_type": "Full-time",
             "advertised_salary_min": 160000,
             "advertised_salary_currency": "USD",
-            "c": 10,
-            "v": 10,
+            "location": "Remote",
+            "employment_type": "Full-time",
             "promises": [
-              {
-                "promise_id": "promise-salary-001",
-                "promise_type": "Salary Range",
-                "promise_text": "Salary range $160,000+",
-                "promised_value_min": 160000,
-                "c": 10,
-                "v": 10
-              },
               {
                 "promise_id": "promise-timeline-001",
                 "promise_type": "Response Timeline",
                 "promise_text": "We'll respond within 7 days",
                 "promised_timeline_days": 7,
+                "c": 10,
+                "v": 10
+              },
+              {
+                "promise_id": "promise-salary-001",
+                "promise_type": "Salary Range",
+                "promise_text": "Salary range $160,000+",
+                "promised_value_min": 160000,
                 "c": 10,
                 "v": 10
               }
@@ -72,9 +83,13 @@
                 "c": 10,
                 "v": 10
               }
-            ]
+            ],
+            "c": 10,
+            "v": 10
           }
-        ]
+        ],
+        "c": 10,
+        "v": 10
       }
     },
     "vouch": {

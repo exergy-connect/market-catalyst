@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-2020-12/schema",
+  "$schema": "https://json-schema.org/draft-2020-12/schema",
   "title": "Consolidated Data Model",
   "description": "Consolidated entity schemas from data model files",
   "$defs": {
@@ -12,17 +12,29 @@
         },
         "job_posting_id": {
           "type": "string",
-          "description": "Reference to the job posting this application is for"
+          "description": "Reference to the job posting this application is for",
+          "x-foreignKeys": [
+            {
+              "entity": "job_posting",
+              "parent_array": "applications"
+            }
+          ],
+          "x-parents": [
+            {
+              "entity": "job_posting",
+              "parent_array": "applications"
+            }
+          ]
         },
         "submitted_date": {
           "type": "string",
-          "description": "Date the application was submitted (YYYY-MM-DD)",
-          "format": "date"
+          "format": "date",
+          "description": "Date the application was submitted (YYYY-MM-DD)"
         },
         "submitted_datetime": {
           "type": "string",
-          "description": "Full date and time of submission",
-          "format": "date-time"
+          "format": "date-time",
+          "description": "Full date and time of submission"
         },
         "applicant_id": {
           "type": "string",
@@ -37,17 +49,21 @@
         },
         "review_id": {
           "type": "string",
-          "description": "Reference to review created from this application experience"
+          "description": "Reference to review created from this application experience",
+          "x-foreignKeys": [
+            {
+              "entity": "review"
+            }
+          ]
         }
       },
+      "description": "Structured record of a job application submission. Tracks when applications\nwere submitted and links to timeline events (responses, interviews, outcomes).\nThis is the core data point for tracking hiring process transparency.\n",
       "required": [
         "application_id",
         "job_posting_id",
         "submitted_date"
       ],
-      "x-primaryKey": "application_id",
-      "x-created": 1,
-      "x-version": 1
+      "x-primaryKey": "application_id"
     },
     "application_timeline": {
       "type": "object",
@@ -58,17 +74,29 @@
         },
         "application_id": {
           "type": "string",
-          "description": "Reference to the application this event belongs to"
+          "description": "Reference to the application this event belongs to",
+          "x-foreignKeys": [
+            {
+              "entity": "application",
+              "parent_array": "timeline"
+            }
+          ],
+          "x-parents": [
+            {
+              "entity": "application",
+              "parent_array": "timeline"
+            }
+          ]
         },
         "event_date": {
           "type": "string",
-          "description": "Date the event occurred (YYYY-MM-DD)",
-          "format": "date"
+          "format": "date",
+          "description": "Date the event occurred (YYYY-MM-DD)"
         },
         "event_datetime": {
           "type": "string",
-          "description": "Full date and time of the event",
-          "format": "date-time"
+          "format": "date-time",
+          "description": "Full date and time of the event"
         },
         "event_type": {
           "type": "string",
@@ -102,15 +130,14 @@
           "description": "Additional notes about the event (structured, not free-text review)"
         }
       },
+      "description": "Structured events in the application lifecycle: responses, interviews,\nghosting, offers, rejections. These are verifiable events that form\nthe basis of trust metrics. Examples: \"Applied Jan 15\", \"First response\nJan 18\", \"Ghosted after second interview\", \"Offer received Feb 1\".\n",
       "required": [
         "timeline_event_id",
         "application_id",
         "event_date",
         "event_type"
       ],
-      "x-primaryKey": "timeline_event_id",
-      "x-created": 1,
-      "x-version": 1
+      "x-primaryKey": "timeline_event_id"
     },
     "company": {
       "type": "object",
@@ -150,13 +177,12 @@
           }
         }
       },
+      "description": "Generic company or organization entity that can be used across different\nmarket types. This is a core entity that provides basic company information\nwithout market-specific relationships.\n",
       "required": [
         "company_id",
         "company_name"
       ],
-      "x-primaryKey": "company_id",
-      "x-created": 1,
-      "x-version": 1
+      "x-primaryKey": "company_id"
     },
     "job_posting": {
       "type": "object",
@@ -167,7 +193,19 @@
         },
         "company_id": {
           "type": "string",
-          "description": "Reference to the company posting this job"
+          "description": "Reference to the company posting this job",
+          "x-foreignKeys": [
+            {
+              "entity": "company",
+              "parent_array": "job_postings"
+            }
+          ],
+          "x-parents": [
+            {
+              "entity": "company",
+              "parent_array": "job_postings"
+            }
+          ]
         },
         "job_title": {
           "type": "string",
@@ -179,8 +217,8 @@
         },
         "posted_date": {
           "type": "string",
-          "description": "Date the job was posted (YYYY-MM-DD)",
-          "format": "date"
+          "format": "date",
+          "description": "Date the job was posted (YYYY-MM-DD)"
         },
         "advertised_salary_min": {
           "type": "number",
@@ -231,14 +269,13 @@
           }
         }
       },
+      "description": "Individual job postings with advertised details including salary ranges,\nrequirements, and timeline promises. These postings are linked to\napplications and reviews.\n",
       "required": [
         "job_posting_id",
         "company_id",
         "job_title"
       ],
-      "x-primaryKey": "job_posting_id",
-      "x-created": 1,
-      "x-version": 1
+      "x-primaryKey": "job_posting_id"
     },
     "personal_vouch": {
       "type": "object",
@@ -249,11 +286,28 @@
         },
         "job_posting_id": {
           "type": "string",
-          "description": "Reference to the job posting being vouched for (subject_id in core vouch)"
+          "description": "Reference to the job posting being vouched for (subject_id in core vouch)",
+          "x-foreignKeys": [
+            {
+              "entity": "job_posting",
+              "parent_array": "personal_vouches"
+            }
+          ],
+          "x-parents": [
+            {
+              "entity": "job_posting",
+              "parent_array": "personal_vouches"
+            }
+          ]
         },
         "core_vouch_id": {
           "type": "string",
-          "description": "Optional reference to core vouch entity for reputation weighting and revocation"
+          "description": "Optional reference to core vouch entity for reputation weighting and revocation",
+          "x-foreignKeys": [
+            {
+              "entity": "vouch"
+            }
+          ]
         },
         "source_identity": {
           "type": "string",
@@ -274,28 +328,25 @@
         },
         "source_seniority": {
           "type": "integer",
-          "description": "Computed age of the source account in days (e.g., GitHub account age). Used for reputation weighting.",
-          "minimum": 0
+          "description": "Computed age of the source account in days (e.g., GitHub account age). Used for reputation weighting."
         },
         "source_activity_index": {
           "type": "number",
-          "description": "Historical 'Proof of Work' metric (e.g., commits/contributions count). Used for reputation weighting.",
-          "minimum": 0
+          "description": "Historical 'Proof of Work' metric (e.g., commits/contributions count). Used for reputation weighting."
         },
         "vouch_weight": {
           "type": "number",
-          "description": "The final 'force' this vouch applies to the Market Gravity. Computed from source reputation metrics.",
-          "minimum": 0
+          "description": "The final 'force' this vouch applies to the Market Gravity. Computed from source reputation metrics."
         },
         "valid_from": {
           "type": "string",
-          "description": "Date from which the vouch is valid (YYYY-MM-DD). Ensures vouches don't stay 'green' if market conditions change.",
-          "format": "date"
+          "format": "date",
+          "description": "Date from which the vouch is valid (YYYY-MM-DD). Ensures vouches don't stay 'green' if market conditions change."
         },
         "valid_until": {
           "type": "string",
-          "description": "Date until which the vouch is valid (YYYY-MM-DD). Optional expiration date for time-based validity.",
-          "format": "date"
+          "format": "date",
+          "description": "Date until which the vouch is valid (YYYY-MM-DD). Optional expiration date for time-based validity."
         },
         "revocation_digest": {
           "type": "string",
@@ -303,8 +354,8 @@
         },
         "revoked_date": {
           "type": "string",
-          "description": "Date when the vouch was revoked (YYYY-MM-DD), if applicable",
-          "format": "date"
+          "format": "date",
+          "description": "Date when the vouch was revoked (YYYY-MM-DD), if applicable"
         },
         "voucher_relationship": {
           "type": "string",
@@ -320,9 +371,7 @@
         },
         "confidence_level": {
           "type": "integer",
-          "description": "Job market specific: Confidence level (1-5) of the voucher in the legitimacy of the posting",
-          "minimum": 1,
-          "maximum": 5
+          "description": "Job market specific: Confidence level (1-5) of the voucher in the legitimacy of the posting"
         },
         "vouch_statement": {
           "type": "string",
@@ -337,6 +386,7 @@
           "description": "Notes about verification of the vouch"
         }
       },
+      "description": "Extends the core vouch entity with job market specific fields. A personal vouch\nfor a job posting represents a conditional transfer of reputation where someone\ngoes on record stating they believe a job posting represents a real opportunity.\nThis implements the Trust Chain concept from the core vouch model, with job-market\nspecific relationship context.\n",
       "required": [
         "vouch_id",
         "job_posting_id",
@@ -344,9 +394,7 @@
         "claim_type",
         "valid_from"
       ],
-      "x-primaryKey": "vouch_id",
-      "x-created": 1,
-      "x-version": 1
+      "x-primaryKey": "vouch_id"
     },
     "promise": {
       "type": "object",
@@ -357,7 +405,19 @@
         },
         "job_posting_id": {
           "type": "string",
-          "description": "Reference to job posting where promise was made"
+          "description": "Reference to job posting where promise was made",
+          "x-foreignKeys": [
+            {
+              "entity": "job_posting",
+              "parent_array": "promises"
+            }
+          ],
+          "x-parents": [
+            {
+              "entity": "job_posting",
+              "parent_array": "promises"
+            }
+          ]
         },
         "promise_type": {
           "type": "string",
@@ -393,19 +453,18 @@
         },
         "verification_date": {
           "type": "string",
-          "description": "Date when promise fulfillment was verified (YYYY-MM-DD)",
-          "format": "date"
+          "format": "date",
+          "description": "Date when promise fulfillment was verified (YYYY-MM-DD)"
         }
       },
+      "description": "Tracks promises made by employers: salary ranges, response timelines,\nprocess steps, etc. These are compared against actual outcomes to measure\ntransparency. Examples: \"We'll respond within 2 weeks\", \"Salary range\n$80k-$100k\", \"3 interview rounds\".\n",
       "required": [
         "promise_id",
         "job_posting_id",
         "promise_type",
         "promise_text"
       ],
-      "x-primaryKey": "promise_id",
-      "x-created": 1,
-      "x-version": 1
+      "x-primaryKey": "promise_id"
     },
     "review": {
       "type": "object",
@@ -416,40 +475,49 @@
         },
         "company_id": {
           "type": "string",
-          "description": "Reference to the company being reviewed"
+          "description": "Reference to the company being reviewed",
+          "x-foreignKeys": [
+            {
+              "entity": "company",
+              "parent_array": "reviews"
+            }
+          ],
+          "x-parents": [
+            {
+              "entity": "company",
+              "parent_array": "reviews"
+            }
+          ]
         },
         "application_id": {
           "type": "string",
-          "description": "Reference to the application this review is based on"
+          "description": "Reference to the application this review is based on",
+          "x-foreignKeys": [
+            {
+              "entity": "application"
+            }
+          ]
         },
         "review_date": {
           "type": "string",
-          "description": "Date the review was submitted (YYYY-MM-DD)",
-          "format": "date"
+          "format": "date",
+          "description": "Date the review was submitted (YYYY-MM-DD)"
         },
         "transparency_score": {
           "type": "integer",
-          "description": "Transparency score (1-5): Were promises kept? Were timelines accurate?",
-          "minimum": 1,
-          "maximum": 5
+          "description": "Transparency score (1-5): Were promises kept? Were timelines accurate?"
         },
         "respect_score": {
           "type": "integer",
-          "description": "Experiential respect score (1-5): Was humanity honored? Was communication respectful?",
-          "minimum": 1,
-          "maximum": 5
+          "description": "Experiential respect score (1-5): Was humanity honored? Was communication respectful?"
         },
         "efficiency_score": {
           "type": "integer",
-          "description": "Time efficiency score (1-5): Was effort proportional to outcome?",
-          "minimum": 1,
-          "maximum": 5
+          "description": "Time efficiency score (1-5): Was effort proportional to outcome?"
         },
         "overall_score": {
           "type": "number",
-          "description": "Overall score (average of transparency, respect, and efficiency scores, computed at application layer)",
-          "minimum": 1,
-          "maximum": 5
+          "description": "Overall score (average of transparency, respect, and efficiency scores, computed at application layer)"
         },
         "was_ghosted": {
           "type": "boolean",
@@ -488,14 +556,13 @@
           }
         }
       },
+      "description": "Structured, verifiable reviews of hiring experiences. These are not free-text\nreviews but structured data points that can be cross-verified. Based on\nthree dimensions: Transparency (were promises kept?), Experiential Respect\n(was humanity honored?), and Time Efficiency (was effort proportional to outcome?).\nThese reviews feed into all interface views: Trust Stock Market, Google Maps,\nWikipedia, and Simple Signals.\n",
       "required": [
         "review_id",
         "company_id",
         "review_date"
       ],
-      "x-primaryKey": "review_id",
-      "x-created": 1,
-      "x-version": 1
+      "x-primaryKey": "review_id"
     },
     "verification": {
       "type": "object",
@@ -506,12 +573,24 @@
         },
         "review_id": {
           "type": "string",
-          "description": "Reference to the review being verified"
+          "description": "Reference to the review being verified",
+          "x-foreignKeys": [
+            {
+              "entity": "review",
+              "parent_array": "verification"
+            }
+          ],
+          "x-parents": [
+            {
+              "entity": "review",
+              "parent_array": "verification"
+            }
+          ]
         },
         "verification_date": {
           "type": "string",
-          "description": "Date verification was performed (YYYY-MM-DD)",
-          "format": "date"
+          "format": "date",
+          "description": "Date verification was performed (YYYY-MM-DD)"
         },
         "verification_method": {
           "type": "string",
@@ -530,35 +609,29 @@
         },
         "verifiability_weight": {
           "type": "number",
-          "description": "Weight assigned based on verifiability (0.0 to 1.0)",
-          "minimum": 0,
-          "maximum": 1
+          "description": "Weight assigned based on verifiability (0.0 to 1.0)"
         },
         "manipulation_risk_score": {
           "type": "number",
-          "description": "Risk score for manipulation (0.0 = low risk, 1.0 = high risk)",
-          "minimum": 0,
-          "maximum": 1
+          "description": "Risk score for manipulation (0.0 = low risk, 1.0 = high risk)"
         },
         "cross_reference_count": {
           "type": "integer",
-          "description": "Number of other reviews that cross-reference this one",
-          "minimum": 0
+          "description": "Number of other reviews that cross-reference this one"
         },
         "notes": {
           "type": "string",
           "description": "Verification notes or flags"
         }
       },
+      "description": "Cross-verification data, manipulation detection, and evidence weighting\nfor reviews. This implements the Verification & Anti-Gamification Layer\nthat ensures data reliability. Includes cross-referencing for consistency,\nweighting by verifiability, and detection of coordinated manipulation.\n",
       "required": [
         "verification_id",
         "review_id",
         "verification_date",
         "verification_method"
       ],
-      "x-primaryKey": "verification_id",
-      "x-created": 1,
-      "x-version": 1
+      "x-primaryKey": "verification_id"
     },
     "vouch": {
       "type": "object",
@@ -590,28 +663,25 @@
         },
         "source_seniority": {
           "type": "integer",
-          "description": "Computed age of the source account in days (e.g., GitHub account age). Used for reputation weighting.",
-          "minimum": 0
+          "description": "Computed age of the source account in days (e.g., GitHub account age). Used for reputation weighting."
         },
         "source_activity_index": {
           "type": "number",
-          "description": "Historical 'Proof of Work' metric (e.g., commits/contributions count). Used for reputation weighting.",
-          "minimum": 0
+          "description": "Historical 'Proof of Work' metric (e.g., commits/contributions count). Used for reputation weighting."
         },
         "vouch_weight": {
           "type": "number",
-          "description": "The final 'force' this vouch applies to the Market Gravity. Computed from source reputation metrics.",
-          "minimum": 0
+          "description": "The final 'force' this vouch applies to the Market Gravity. Computed from source reputation metrics."
         },
         "valid_from": {
           "type": "string",
-          "description": "Date from which the vouch is valid (YYYY-MM-DD). Ensures vouches don't stay 'green' if market conditions change.",
-          "format": "date"
+          "format": "date",
+          "description": "Date from which the vouch is valid (YYYY-MM-DD). Ensures vouches don't stay 'green' if market conditions change."
         },
         "valid_until": {
           "type": "string",
-          "description": "Date until which the vouch is valid (YYYY-MM-DD). Optional expiration date for time-based validity.",
-          "format": "date"
+          "format": "date",
+          "description": "Date until which the vouch is valid (YYYY-MM-DD). Optional expiration date for time-based validity."
         },
         "revocation_digest": {
           "type": "string",
@@ -619,14 +689,15 @@
         },
         "revoked_date": {
           "type": "string",
-          "description": "Date when the vouch was revoked (YYYY-MM-DD), if applicable",
-          "format": "date"
+          "format": "date",
+          "description": "Date when the vouch was revoked (YYYY-MM-DD), if applicable"
         },
         "vouch_statement": {
           "type": "string",
           "description": "Optional statement from the voucher explaining the vouch"
         }
       },
+      "description": "A market-agnostic vouch entity that represents a conditional transfer of\nreputation. A vouch is a structural link between a Subject (the opportunity\nor thing being vouched for) and a Source (the identity making the vouch).\nThis implements the Trust Chain concept where vouches can be weighted by\nsource reputation, have time-based validity, and support revocation.\n",
       "required": [
         "vouch_id",
         "subject_id",
@@ -634,9 +705,39 @@
         "claim_type",
         "valid_from"
       ],
-      "x-primaryKey": "vouch_id",
-      "x-created": 1,
-      "x-version": 1
+      "x-primaryKey": "vouch_id"
+    },
+    "change": {
+      "type": "object",
+      "description": "Change log entry describing a versioned modification to the consolidated data model or data.",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique change identifier (monotonically increasing)"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of the change"
+        },
+        "author": {
+          "type": "string",
+          "description": "Author of the change"
+        },
+        "note": {
+          "type": "string",
+          "description": "Optional note describing the change"
+        },
+        "git_commit_hash": {
+          "type": "string",
+          "description": "Git commit hash corresponding to this change"
+        }
+      },
+      "required": [
+        "id",
+        "timestamp"
+      ],
+      "additionalProperties": false
     }
   },
   "type": "object",
@@ -693,6 +794,12 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/vouch"
+      }
+    },
+    "change": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/change"
       }
     }
   },
