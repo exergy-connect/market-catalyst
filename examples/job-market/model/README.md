@@ -1,282 +1,285 @@
-# Job Market Trust Infrastructure - Data Model
+# Job Market Trust Infrastructure — Data Model
 
-This xFrame YAML model implements the data architecture described in ["The Architecture of Hiring Truth"](https://substack.com/home/post/p-184931834) by Sarah Trumble.
+This **xFrame** data model (JSON fragments) implements the architecture described in [“The Architecture of Hiring Truth”](https://substack.com/home/post/p-184931834) by Sarah Trumble.
 
 ## Overview
 
-This model supports structured, verifiable data about hiring processes that can power multiple interface views:
-- **Trust Stock Market** - Trends, volatility, accountability metrics
-- **Google Maps of Hiring** - Routes, bottlenecks, alternatives
-- **Wikipedia of Job Hunting** - Collective knowledge, lived experience
-- **Simple Signals** - Yelp-style go/no-go signals
+The model supports structured, verifiable hiring data that can power several interface metaphors:
 
-All views are powered by the same underlying data layer, following the "cathedral and stained glass windows" metaphor: the same sunlight (truth) streams through different windows (interfaces).
+- **Trust Stock Market** — Trends, volatility, accountability-style metrics  
+- **Google Maps of Hiring** — Routes, bottlenecks, alternatives  
+- **Wikipedia of Job Hunting** — Collective knowledge and lived experience  
+- **Simple Signals** — Short go / no-go style summaries  
 
-## Model Structure
+All of these read from the same underlying layer: the “cathedral and stained glass” idea—one body of truth, many presentations.
 
-This job-market model extends the **core Market Catalyst models** with job-market specific entities:
+## Model structure
+
+The job-market model **extends** the shared **Market Catalyst core** entities with hiring-specific ones.
+
+Fragments use the **type container** shape expected by strict xFrame tooling (`type.primitive`, `type.array.entity`, `foreignKeys` inside `type`, and so on).
 
 ```
 market-catalyst/
-├── core/model/              # Generic, market-agnostic entities
-│   ├── company.yaml         # Generic company/organization entity
-│   └── vouch.yaml           # Generic vouch entity (Trust Chain)
+├── core/model/                    # Shared, market-agnostic fragments
+│   ├── company.json
+│   └── vouch.json
 │
-└── examples/job-market/model/  # Job-market specific entities
-    ├── core -> ../../../core/model  # Symlink to core models
-    ├── job_posting.yaml
-    ├── application.yaml
-    ├── application_timeline.yaml
-    ├── promise.yaml
-    ├── review.yaml
-    ├── personal_vouch.yaml   # Extends core vouch
-    └── verification.yaml
+└── examples/job-market/model/     # Job-market fragments
+    ├── model -> ../../../core/model   # Symlink (see consolidation note below)
+    ├── application.json
+    ├── application_timeline.json
+    ├── job_posting.json
+    ├── personal_vouch.json
+    ├── promise.json
+    ├── review.json
+    └── verification.json
 ```
 
-The `core/` symlink allows the consolidator to access core entities when processing job-market models.
+**Consolidation note:** The Node **xframe-consolidate** walker loads `*.json` recursively but **skips subdirectories named `model`** (and `output`). The `model/` symlink is still useful for editors and docs, but the consolidator will **not** pick up `core/model` through it. For a full merge, copy **`core/model/*.json`** and **`examples/job-market/model/*.json`** into a **flat** directory and pass that as `--model-dir` (see [Usage](#usage)).
 
-## Architecture Layers
+Sample input data for the example lives at [`../data/high-gravity-anchor.json`](../data/high-gravity-anchor.json).
 
-### Layer 1: Trust Data Layer (The Sunlight)
+## Architecture layers
 
-The foundational layer of structured, verifiable events:
+### Layer 1: Trust data (the sunlight)
 
-#### Core Entities (Generic, Market-Agnostic)
+#### Core entities (generic)
 
-- **Company** (`core/model/company.yaml`) - Generic company/organization entity
-  - Basic company information (name, domain, industry, location)
-  - No market-specific relationships
+- **Company** (`core/model/company.json`) — Organization record (name, domain, industry, location) without vertical-specific ties.  
+- **Vouch** (`core/model/vouch.json`) — Generic trust-chain row: subject ↔ source, claim type, reputation signals, validity and revocation, optional evidence link.
 
-- **Vouch** (`core/model/vouch.yaml`) - Generic vouch entity for conditional transfer of reputation
-  - **Subject-Source Link**: `subject_id` (thing being vouched for) + `source_identity` (GitHub UID/Public Key)
-  - **Claim Types**: EXISTENCE, INTEGRITY, TERMS
-  - **Reputation Weighting**: `source_seniority`, `source_activity_index`, `vouch_weight`
-  - **Conditional Guarantee**: `valid_from`, `valid_until`, `revocation_digest`
-  - **Evidence**: `evidence_link` to commits/files/external proof
+#### Job-market entities
 
-#### Job-Market Specific Entities
+- **Job posting** — Listing and advertised terms.  
+- **Application** — Submission and links to timeline and reviews.  
+- **Application timeline** — Discrete events (responses, interviews, ghosting, offers, …).  
+- **Promise** — Advertised commitments (salary band, response time, …).  
+- **Review** — Structured scores: transparency, experiential respect, time efficiency.  
+- **Personal vouch** — Job-market vouch tied to a posting, optional link to core `vouch` for weighting.  
 
-- **Job Posting** - Job listings with advertised details
-- **Application** - Application submissions
-- **Application Timeline** - Verifiable events (responses, interviews, ghosting, offers)
-- **Promise** - Promises made (salary ranges, timelines, process steps)
-- **Review** - Structured reviews based on three dimensions:
-  - **Transparency** (were promises kept?)
-  - **Experiential Respect** (was humanity honored?)
-  - **Time Efficiency** (was effort proportional to outcome?)
-- **Personal Vouch** - Extends core vouch with job-market specific fields
-  - References `job_posting_id` (subject)
-  - Adds job-market relationship context (`voucher_relationship`)
-  - Includes all core vouch reputation and revocation features
+### Layer 2: Verification and anti-gamification (the prism)
 
-### Layer 2: Verification & Anti-Gamification Layer (The Prism)
+- **Verification** — Cross-checks, manipulation risk, evidence weighting.
 
-- **Verification** - Cross-verification, manipulation detection, evidence weighting
+### Layer 3: Interfaces (the stained glass)
 
-### Layer 3: Interface Layer (The Stained Glass)
+UIs and demos consume consolidated data; they are not defined in these fragments.
 
-The same verified data can be presented as different views (implemented in application layer, not in this model).
-
-## Entity Relationships
+## Entity relationships
 
 ```
 company (core)
-  ├── job_postings (one-to-many)
-  │     ├── applications (one-to-many)
-  │     │     └── timeline (one-to-many)
-  │     ├── promises (one-to-many)
-  │     └── personal_vouches (one-to-many)
-  │           └── references vouch (core) for reputation weighting
-  └── reviews (one-to-many)
-        └── verification (one-to-many)
+  ├── job_postings
+  │     ├── applications
+  │     │     └── timeline
+  │     ├── promises
+  │     └── personal_vouches
+  │           └── may reference vouch (core)
+  └── reviews
+        └── verification
 ```
 
-## Key Design Principles
+## Design principles
 
-### Structured, Not Free-Text
+### Structured, not free-text
 
-Unlike traditional review platforms, this model emphasizes **structured, verifiable events** rather than free-text reviews:
+Prefer verifiable fields and enums over narrative-only reviews, for example:
 
-- ✅ "Applied Jan 15"
-- ✅ "First response Jan 18"
-- ✅ "Ghosted after second interview"
-- ✅ "Offer received Feb 1 with 10% below advertised range"
-- ❌ Not: "This company is terrible" (free-text)
+- “Applied Jan 15”, “First response Jan 18”, “Ghosted after second interview”, “Offer Feb 1, below advertised band”  
+- Not: “This company is terrible” as the sole signal  
 
-### Three Dimensions of Trust
+### Three trust dimensions (reviews)
 
-Reviews are structured around three dimensions:
+1. **Transparency** (`transparency_score`) — Promises vs reality, timelines.  
+2. **Experiential respect** (`respect_score`) — Communication and dignity.  
+3. **Time efficiency** (`efficiency_score`) — Effort vs outcome.  
 
-1. **Transparency** (`transparency_score`) - Were promises kept? Were timelines accurate?
-2. **Experiential Respect** (`respect_score`) - Was humanity honored? Was communication respectful?
-3. **Time Efficiency** (`efficiency_score`) - Was effort proportional to outcome?
+### Verifiable timeline events
 
-### Verifiable Events
+Typed events (enums), dates or datetimes, promise alignment where relevant, derived delays where the model allows.
 
-Timeline events are structured with:
-- Event types (enum): Application Submitted, First Response, Screening Call, Technical Interview, Offer Extended, Ghosted, etc.
-- Dates and timestamps
-- Promise fulfillment tracking
-- Response time calculations
+### Trust chain (vouching)
 
-### Trust Chain (Vouching)
+Weighted by source signals (`source_seniority`, `source_activity_index`, `vouch_weight`), bounded in time (`valid_from` / `valid_until`), revocable (`revocation_digest`, etc.), with optional `evidence_link`. **Personal vouch** adds job-market context (e.g. `voucher_relationship`) on top of that pattern.
 
-The core vouch entity implements a **conditional transfer of reputation**:
+### Anti-gamification
 
-- **Reputation Weighting**: Vouches are weighted by source seniority and activity
-  - `source_seniority`: Account age (e.g., GitHub account age in days)
-  - `source_activity_index`: Historical proof of work (commits/contributions)
-  - `vouch_weight`: Final force applied to Market Gravity
+Verification supports cross-reference, weighting, manipulation hints, and balancing anonymity with accountability.
 
-- **Conditional Guarantee**: Time-based validity with revocation
-  - `valid_from` / `valid_until`: Time-based validity windows
-  - `revocation_digest`: Cryptographic revocation mechanism
-  - If voucher discovers the originator lied, they can issue a revocation that immediately flips the go_nogo_signal
+## Example data shape (JSON)
 
-- **Evidence-Based**: `evidence_link` references commits, files, or external proof
+Nested rows that are **already under** a parent (e.g. `promises` inside a `job_posting`) should **not** repeat the parent foreign key (`job_posting_id`); the consolidator infers it and will warn if it is duplicated.
 
-The job-market `personal_vouch` extends this core concept with market-specific relationship context while maintaining all reputation and revocation features.
-
-### Anti-Gamification
-
-The verification entity supports:
-- Cross-referencing for consistency
-- Evidence weighting
-- Manipulation detection
-- Anonymity + accountability balance
-
-## Example Data Structure
-
-```yaml
-company:
-  - company_id: "acme-corp"
-    company_name: "Acme Corporation"
-    domain: "acme.com"
-    industry: "Technology"
-    
-    job_postings:
-      - job_posting_id: "acme-eng-001"
-        job_title: "Senior Software Engineer"
-        advertised_salary_min: 120000
-        advertised_salary_max: 150000
-        posted_date: "2026-01-15"
-        
-        applications:
-          - application_id: "app-001"
-            submitted_date: "2026-01-20"
-            
-            timeline:
-              - timeline_event_id: "event-001"
-                event_type: "First Response"
-                event_date: "2026-01-22"
-                was_promise_kept: true
-              - timeline_event_id: "event-002"
-                event_type: "Ghosted"
-                event_date: "2026-02-10"
-        
-        promises:
-          - promise_id: "promise-001"
-            promise_type: "Response Timeline"
-            promise_text: "We'll respond within 2 weeks"
-            promised_timeline_days: 14
-            was_kept: true
-        
-        personal_vouches:
-          - vouch_id: "vouch-001"
-            job_posting_id: "acme-eng-001"
-            source_identity: "github:alice-dev"
-            claim_type: "EXISTENCE"
-            source_seniority: 1825  # 5 years
-            source_activity_index: 1250  # commits
-            vouch_weight: 0.95
-            valid_from: "2026-01-15"
-            voucher_relationship: "Current Employee"
-            confidence_level: 5
-    
-    reviews:
-      - review_id: "review-001"
-        application_id: "app-001"
-        transparency_score: 4
-        respect_score: 2
-        efficiency_score: 1
-        was_ghosted: true
-        go_nogo_signal: "NO-GO"
-        
-        verification:
-          - verification_id: "verify-001"
-            verification_method: "Cross-Reference"
-            is_consistent: true
-            verifiability_weight: 0.9
-            manipulation_risk_score: 0.1
+```json
+{
+  "company": [
+    {
+      "company_id": "acme-corp",
+      "company_name": "Acme Corporation",
+      "domain": "acme.com",
+      "industry": "Technology",
+      "job_postings": [
+        {
+          "job_posting_id": "acme-eng-001",
+          "company_id": "acme-corp",
+          "job_title": "Senior Software Engineer",
+          "advertised_salary_min": 120000,
+          "advertised_salary_max": 150000,
+          "posted_date": "2026-01-15",
+          "applications": [
+            {
+              "application_id": "app-001",
+              "job_posting_id": "acme-eng-001",
+              "submitted_date": "2026-01-20",
+              "timeline": [
+                {
+                  "timeline_event_id": "event-001",
+                  "application_id": "app-001",
+                  "event_type": "First Response",
+                  "event_date": "2026-01-22",
+                  "was_promise_kept": true
+                },
+                {
+                  "timeline_event_id": "event-002",
+                  "application_id": "app-001",
+                  "event_type": "Ghosted",
+                  "event_date": "2026-02-10"
+                }
+              ]
+            }
+          ],
+          "promises": [
+            {
+              "promise_id": "promise-001",
+              "promise_type": "Response Timeline",
+              "promise_text": "We'll respond within 2 weeks",
+              "promised_timeline_days": 14,
+              "was_kept": true
+            }
+          ],
+          "personal_vouches": [
+            {
+              "vouch_id": "vouch-001",
+              "job_posting_id": "acme-eng-001",
+              "source_identity": "github:alice-dev",
+              "claim_type": "EXISTENCE",
+              "source_seniority": 1825,
+              "source_activity_index": 1250,
+              "vouch_weight": 0.95,
+              "valid_from": "2026-01-15",
+              "voucher_relationship": "Current Employee",
+              "confidence_level": 5
+            }
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "review_id": "review-001",
+          "company_id": "acme-corp",
+          "application_id": "app-001",
+          "review_date": "2026-02-11",
+          "transparency_score": 4,
+          "respect_score": 2,
+          "efficiency_score": 1,
+          "was_ghosted": true,
+          "go_nogo_signal": "NO-GO",
+          "verification": [
+            {
+              "verification_id": "verify-001",
+              "review_id": "review-001",
+              "verification_date": "2026-02-11",
+              "verification_method": "Cross-Reference",
+              "is_consistent": true,
+              "verifiability_weight": 0.9,
+              "manipulation_risk_score": 0.1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ## Usage
 
-### Consolidate Models
+### Consolidate (Node, JSON)
 
-The consolidator will automatically discover core models through the symlink:
+Use the **xframe-consolidate** bundle (Node 18+). If you use Cursor, a typical path is:
+
+`~/.cursor/skills/xframe-consolidate/scripts/consolidate.min.js`
+
+Set `CONSOLIDATE_JS` to your actual `consolidate.min.js` path, then from the **repository root**:
 
 ```bash
-PYTHONPATH=/path/to/xFrame/src python3 -m xframe.consolidator \
-    examples/job-market/data/ \
-    --model-dir examples/job-market/model/ \
-    --note "Job Market Trust Infrastructure Model" \
-    --author "Market Catalyst - Job Market"
+CONSOLIDATE_JS="${CONSOLIDATE_JS:-$HOME/.cursor/skills/xframe-consolidate/scripts/consolidate.min.js}"
+MERGE_DIR=examples/job-market/.xf-model-merge
+
+rm -rf "$MERGE_DIR"
+mkdir -p "$MERGE_DIR"
+cp core/model/*.json examples/job-market/model/*.json "$MERGE_DIR/"
+
+node "$CONSOLIDATE_JS" \
+  examples/job-market/data \
+  --model-dir "$MERGE_DIR" \
+  --note "Job Market Trust Infrastructure — merge core + job-market JSON models" \
+  --author "Market Catalyst - Job Market" \
+  --git-commit-hash "$(git rev-parse HEAD)" \
+  --js
+
+rm -rf "$MERGE_DIR"
 ```
 
-The consolidator will process:
-- All YAML files in `examples/job-market/model/`
-- Core models via the `core/` symlink (`core/model/company.yaml`, `core/model/vouch.yaml`)
+**Outputs** (under `examples/job-market/output/`):
 
-### Model Files
+- `consolidated.schema.json` — merged JSON Schema (`$defs` per entity)  
+- `consolidated_data.json` — nested data, metadata, and `change`  
+- Optional: `consolidated.schema.js`, `consolidated_data.js` when `--js` is set  
+- `consolidation_log.txt` — step log  
 
-#### Core Models (Generic)
-- `core/model/company.yaml` - Generic company/organization entity
-- `core/model/vouch.yaml` - Generic vouch entity (Trust Chain)
+Pass `--close-fk-enums` if you want foreign-key fields in the schema tightened to primary keys present in the loaded dataset (see xframe-consolidate documentation).
 
-#### Job-Market Models
-- `job_posting.yaml` - Job posting entity
-- `application.yaml` - Application entity
-- `application_timeline.yaml` - Timeline events
-- `promise.yaml` - Promises tracking
-- `review.yaml` - Structured reviews
-- `personal_vouch.yaml` - Job-market vouch (extends core vouch)
-- `verification.yaml` - Verification and anti-gamification
+### Model files
 
-## Alignment with Article
+**Core**
 
-This model implements the architecture described in the article:
+- `core/model/company.json`  
+- `core/model/vouch.json`  
 
-✅ **Data-First Approach** - Structured truth about hiring processes  
-✅ **Three-Layer Architecture** - Data, Verification, Interface layers  
-✅ **Structured Events** - Verifiable events, not free-text  
-✅ **Three Dimensions** - Transparency, Respect, Efficiency  
-✅ **Anti-Gamification** - Cross-verification and manipulation detection  
-✅ **Multiple Views** - Same data supports all interface types  
-✅ **Trust Chain** - Conditional transfer of reputation via vouching
+**Job market**
 
-## Core vs Market-Specific
+- `job_posting.json`  
+- `application.json`  
+- `application_timeline.json`  
+- `promise.json`  
+- `review.json`  
+- `personal_vouch.json`  
+- `verification.json`  
 
-This model follows a **separation of concerns**:
+## Alignment with the article
 
-- **Core Models** (`core/model/`) - Generic, reusable entities that can be used across different market types (job market, real estate, services, etc.)
-  - `company`: Generic organization entity
-  - `vouch`: Generic trust chain entity
+- Data-first hiring truth  
+- Three layers: data, verification, interface  
+- Structured events instead of-only narrative  
+- Transparency, respect, efficiency  
+- Anti-gamification and cross-checks  
+- Multiple views on one dataset  
+- Trust chain via vouching  
 
-- **Job-Market Models** (`examples/job-market/model/`) - Market-specific entities that extend core concepts
-  - Job-market entities reference core entities via foreign keys
-  - Job-market entities add market-specific fields and relationships
+## Core vs market-specific
 
-This architecture allows:
-- Reuse of core trust infrastructure across markets
-- Market-specific extensions without duplicating core logic
-- Consistent trust mechanisms (vouching, reputation) across all markets
+- **`core/model/`** — Reusable across verticals (company, vouch).  
+- **`examples/job-market/model/`** — Hiring-specific entities and relationships referencing core types.  
 
-## Future Enhancements
+That split keeps shared trust mechanics in one place while allowing market-specific extensions.
 
-- Demographic-specific tracking (for Wikipedia-style community guides)
-- Industry-specific metrics
-- Geographic routing data (for Google Maps view)
-- Time-series aggregation (for Trust Stock Market view)
-- Community contribution tracking
-- Additional core entities for cross-market use (e.g., review, verification)
+## Future enhancements
+
+- Demographic-aware community views  
+- Industry-specific metrics  
+- Geographic routing data for map-style views  
+- Time-series aggregates for “market”-style dashboards  
+- Community contribution tracking  
+- More shared core entities where several markets need the same shape (e.g. review, verification)

@@ -1,59 +1,64 @@
-# 🌀 Market-Catalyst (Core)
+# Market-Catalyst (Core)
 
-> **"Converting Market Entropy into Human Exergy."**
+> *Converting Market Entropy into Human Exergy.*
 
-**Market-Catalyst** is an open-source, GitHub-native kernel for building auditable marketplaces. It provides the foundational logic for a new paradigm of exchange—one where **integrity is the primary currency** and **transparency is enforced by the architecture, not the participants.**
+**Market-Catalyst** is an open-source, GitHub-native kernel for building auditable marketplaces. It is built around integrity as the primary signal and transparency enforced by structure—not by trusting participants to self-report.
 
-## 🔬 The Concept
+## The concept
 
-Traditional marketplaces are designed to maximize volume, which inevitably leads to high noise, information asymmetry, and the "Efficiency Paradox."
+Traditional marketplaces optimize for volume, which tends to amplify noise, asymmetry, and what we call the “Efficiency Paradox.”
 
-The **Market-Catalyst** fixes this by treating every market interaction as a verifiable "Audit." By mapping the **Promises** made by an originator against the **Actual Outcomes** recorded on a public ledger, the Catalyst calculates the "Market Gravity" of any opportunity.
+Market-Catalyst treats market interactions as **audits**: **promises** from an originator are compared to **outcomes** on a public ledger, so the “market gravity” of an opportunity can be reasoned about from evidence, not vibes.
 
-## 🏗️ The Architecture
+## Architecture
 
-This repository provides the **Generic Kernel**. It is industry-agnostic and built to be "Sovereign-First."
+This repository is the **generic kernel**: industry-agnostic and intended to be sovereign-first.
 
-### 1. The Immutable Ledger (Git-as-a-Backend)
+### 1. Git as the ledger
 
-We do not use traditional databases. All market data is stored in **JSON-schema compliant files** within the repository.
+Market state lives in **JSON Schema–backed** artifacts in the repo instead of a hosted database.
 
-* **Tamper-Proof:** Every change is logged via Git version control.
-* **Publicly Auditable:** Anyone can "fork" the truth or "blame" a record to see its history.
-* **Zero Friction:** No hosting costs or database maintenance for entrepreneurs.
+- **Tamper-evident:** history comes from Git.
+- **Auditable:** anyone can inspect, fork, or trace blame on a record.
+- **Low ops:** no database to run for a new deployment.
 
-### 2. Vouch-Based Integrity
+### 2. Vouch-based integrity
 
-Trust is anchored in **GitHub Identities**.
+Trust is anchored in **strong identities** (e.g. GitHub UIDs in the reference design).
 
-* Instead of anonymous likes, we use **Vouches**.
-* A Vouch is a structural link between a GitHub UID and a market claim.
-* Reputation is weighted by the "Exergy" (historical proof-of-work) of the voucher's GitHub profile.
+- **Vouches** replace anonymous engagement metrics.
+- A vouch links a source identity to a concrete market claim.
+- Weight can reflect durable “exergy” signals (e.g. account age, real contribution history).
 
-### 3. The Core Schema
+### 3. Schema and data
 
-The kernel operates on four universal entities:
+Conceptually, the kernel reasons over four roles:
 
-* **Originator:** The entity making a claim (e.g., Employer, Landlord).
-* **Opportunity:** The unit of exchange (e.g., Job Posting, Rental).
-* **Protocol:** The timeline of events that verify the interaction.
-* **Attestation (The Vouch):** The external validation of the claim.
+| Role | Meaning | Example in a hiring market |
+|------|---------|----------------------------|
+| Originator | Party making the claim | Employer / company |
+| Opportunity | Unit of exchange | Job posting |
+| Protocol | Verifiable timeline of the interaction | Application and timeline events |
+| Attestation (vouch) | External validation of the claim | Integrity / terms vouches |
 
-## 🚀 The Franchise Model
+In this repo, those ideas are expressed as **xFrame** data-model fragments: JSON files under [`core/model/`](core/model/) (shared entities) plus market-specific definitions under [`examples/job-market/model/`](examples/job-market/model/). Sample records live under [`examples/job-market/data/`](examples/job-market/data/).
 
-This repo is designed to be **cloned**. An entrepreneur can take this "Unbaked" kernel and deploy a specialized instance (e.g., for local hiring, ethical housing, or freelance services) in minutes.
+Consolidation (see [`examples/job-market/model/README.md`](examples/job-market/model/README.md)) produces a merged **JSON Schema** and nested **consolidated data**, e.g. [`examples/job-market/output/consolidated.schema.json`](examples/job-market/output/consolidated.schema.json) and [`examples/job-market/output/consolidated_data.json`](examples/job-market/output/consolidated_data.json).
 
-**Example Implementation:** See `/examples/labor-market` for a reference implementation of Sarah Springsteen Trumble’s *Theory of Online Market Gravity*.
+## Franchise model
 
-## 🎯 Demos
+The repo is meant to be **cloned**. You specialize it for a vertical (hiring, housing, freelance, and so on) by extending the core model and shipping your own data.
 
-- **[Job Market Trust Infrastructure](https://exergy-connect.github.io/market-catalyst/examples/job-market/)** - Interactive dashboard showcasing different views of the same trust infrastructure data (Trust Stock Market, Google Maps of Hiring, Wikipedia of Job Hunting, Simple Signals)
+**Reference implementation:** [`examples/job-market/`](examples/job-market/) — Sarah Springsteen Trumble’s *Theory of Online Market Gravity* applied to hiring transparency, promises, reviews, and verification.
 
-- **[Vouch PR Demo](https://exergy-connect.github.io/market-catalyst/examples/job-market/vouch-pr-demo.html)** - Create vouches and submit them via GitHub Pull Requests - no terminal required!
+## Demos
 
-## ⚖️ License
+- **[Job Market Trust Infrastructure](https://exergy-connect.github.io/market-catalyst/examples/job-market/)** — Multiple views on the same underlying trust data (e.g. signals, maps-style and narrative UIs).
+- **[Vouch PR demo](https://exergy-connect.github.io/market-catalyst/examples/job-market/vouch-pr-demo.html)** — Author vouches and propose them via GitHub Pull Requests without using a terminal.
 
-Distributed under the **MIT License**. See [LICENSE](LICENSE) file for details.
+## License
+
+Distributed under the **MIT License**. See [LICENSE](LICENSE).
 
 We provide the activation energy; you provide the community.
 
